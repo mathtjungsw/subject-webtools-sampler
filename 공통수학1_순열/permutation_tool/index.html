@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>순열 탐험대: 자리마다 선택지가 줄어드는 이유</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">공통수학 1 · 경우의 수 · 순열</p>
+      <h1>순열 탐험대</h1>
+      <p class="subtitle">학생이 직접 고르고, 움직이고, 가지가 자라나는 과정을 보며 <b>nPr</b>의 의미를 이해하는 인터렉티브 웹툴</p>
+    </div>
+    <div class="hero-card">
+      <span class="big-formula">ₙPᵣ</span>
+      <span>순서가 중요하고, 한 번 고른 것은 다시 고르지 않는 선택</span>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="학습 단계 탭">
+    <button class="tab active" data-tab="tour">1. 관광지 순서</button>
+    <button class="tab" data-tab="formula">2. 공식 만들기</button>
+    <button class="tab" data-tab="generator">3. 순열 생성기</button>
+    <button class="tab" data-tab="factorial">4. n! 실험실</button>
+    <button class="tab" data-tab="mission">5. 조건 순열 미션</button>
+    <button class="tab" data-tab="quiz">6. 도전 문제</button>
+  </nav>
+
+  <main>
+    <section id="tour" class="panel active">
+      <div class="panel-head">
+        <div>
+          <p class="step-label">STEP 1</p>
+          <h2>제주 관광지 오전·오후 선택하기</h2>
+          <p>4곳 중 오전과 오후에 서로 다른 2곳을 <b>순서대로</b> 골라 보세요. 선택할 때마다 남은 후보와 계산 과정이 움직이며 나타납니다.</p>
+        </div>
+        <button class="ghost" id="tourReset">처음으로</button>
+      </div>
+      <div class="tour-grid">
+        <div class="map-card">
+          <h3>관광지 후보</h3>
+          <div class="places" id="places"></div>
+          <p class="hint">장소 카드를 클릭하면 오전 → 오후 순서로 들어갑니다.</p>
+        </div>
+        <div class="schedule-card">
+          <h3>나의 일정</h3>
+          <div class="slots">
+            <div class="slot" data-slot="0"><span>오전</span><strong id="slot0">?</strong></div>
+            <div class="slot" data-slot="1"><span>오후</span><strong id="slot1">?</strong></div>
+          </div>
+          <div class="thinking-box" id="tourThinking">
+            <b>생각 시작!</b> 오전에 갈 곳은 4가지입니다.
+          </div>
+          <div class="formula-line" id="tourFormula">4P2 = 4 × 3 = 12</div>
+        </div>
+        <div class="tree-card">
+          <h3>수형도 미리보기</h3>
+          <div id="tourTree" class="tree"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="formula" class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="step-label">STEP 2</p>
+          <h2>nPr 공식이 만들어지는 과정</h2>
+          <p>서로 다른 n개에서 r개를 뽑아 일렬로 놓을 때, 자리마다 선택지가 하나씩 줄어드는 모습을 확인합니다.</p>
+        </div>
+        <button class="primary" id="animateFormula">단계 애니메이션</button>
+      </div>
+      <div class="control-row">
+        <label>서로 다른 것의 개수 n <input id="nRange" type="range" min="2" max="9" value="6"><span id="nVal">6</span></label>
+        <label>택하는 것의 개수 r <input id="rRange" type="range" min="1" max="6" value="4"><span id="rVal">4</span></label>
+      </div>
+      <div class="seat-stage" id="seatStage"></div>
+      <div class="equation-builder" id="equationBuilder"></div>
+      <div class="note-card">핵심: 첫째 자리는 n가지, 둘째 자리는 이미 쓴 1개를 제외해 n-1가지, r째 자리는 n-r+1가지입니다.</div>
+    </section>
+
+    <section id="generator" class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="step-label">STEP 3</p>
+          <h2>순열 생성기</h2>
+          <p>원소를 직접 입력하고 가능한 순열이 어떤 묶음으로 생기는지 살펴봅니다.</p>
+        </div>
+        <button class="primary" id="generatePerms">순열 만들기</button>
+      </div>
+      <div class="control-row wrap">
+        <label class="wide">원소 입력 <input id="itemsInput" type="text" value="A,B,C,D,E" placeholder="예: A,B,C,D,E"></label>
+        <label>r <input id="genR" type="number" min="1" max="6" value="3"></label>
+        <label><input id="limitView" type="checkbox" checked> 처음 120개까지만 보기</label>
+      </div>
+      <div class="summary-card" id="genSummary">아직 생성하지 않았습니다.</div>
+      <div class="perm-groups" id="permGroups"></div>
+    </section>
+
+    <section id="factorial" class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="step-label">STEP 4</p>
+          <h2>n! 실험실</h2>
+          <p>모든 사람을 전부 줄 세울 때는 nPn = n! 입니다. 셔플로 하나의 배열을 만들고, 전체 경우의 수를 확인합니다.</p>
+        </div>
+        <div class="button-row"><button class="ghost" id="shuffleLine">셔플</button><button class="primary" id="showAlbum">전체 경우 보기</button></div>
+      </div>
+      <div class="control-row"><label>n <input id="factN" type="range" min="3" max="7" value="4"><span id="factNVal">4</span></label></div>
+      <div class="line-stage" id="lineStage"></div>
+      <div class="formula-line" id="factFormula">4! = 4 × 3 × 2 × 1 = 24</div>
+      <div class="album" id="album"></div>
+    </section>
+
+    <section id="mission" class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="step-label">STEP 5</p>
+          <h2>조건 순열 미션</h2>
+          <p>봅슬레이 좌석 배치처럼 조건이 붙으면 무엇을 먼저 묶거나 고정해야 하는지 단계별로 봅니다.</p>
+        </div>
+      </div>
+      <div class="mission-grid">
+        <button class="mission-card active" data-mission="near">미션 1<br><b>A와 B가 이웃</b></button>
+        <button class="mission-card" data-mission="ends">미션 2<br><b>C와 D가 양 끝</b></button>
+      </div>
+      <div class="sled-stage" id="sledStage"></div>
+      <div class="mission-steps" id="missionSteps"></div>
+    </section>
+
+    <section id="quiz" class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="step-label">STEP 6</p>
+          <h2>도전 문제</h2>
+          <p>답을 바로 맞히기보다, 자리별 선택 수를 먼저 생각해 보세요.</p>
+        </div>
+        <button class="ghost" id="newQuiz">다른 문제</button>
+      </div>
+      <div class="quiz-card">
+        <h3 id="quizQuestion"></h3>
+        <div class="control-row wrap">
+          <input id="quizAnswer" type="number" placeholder="답 입력">
+          <button class="primary" id="checkQuiz">확인</button>
+          <button class="ghost" id="showHint">힌트</button>
+        </div>
+        <div id="quizFeedback" class="feedback"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>수업용 안내: 모든 계산은 브라우저 안에서만 처리됩니다. 인터넷 연결 없이도 실행할 수 있습니다.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

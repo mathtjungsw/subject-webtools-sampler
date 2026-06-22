@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>마트 영수증 세금 계산 웹툴</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+      background: #f3f6fb;
+      color: #222;
+    }
+
+    header {
+      background: linear-gradient(135deg, #16a34a, #2563eb);
+      color: white;
+      padding: 30px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto 50px;
+      padding: 0 16px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: #e5e7eb;
+      padding: 13px 18px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 850px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+    }
+
+    h2 {
+      color: #166534;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .product {
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 14px;
+      background: #fafafa;
+    }
+
+    .product .emoji {
+      font-size: 34px;
+    }
+
+    .product-name {
+      font-weight: 900;
+      margin: 7px 0 4px;
+    }
+
+    .product-price {
+      color: #111827;
+      font-weight: 800;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .taxable {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .taxfree {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .luxury {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .add-btn, .main-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 11px;
+      font-weight: 900;
+      margin-top: 10px;
+      background: #16a34a;
+      color: white;
+    }
+
+    .add-btn:hover, .main-btn:hover {
+      filter: brightness(0.95);
+    }
+
+    .danger-btn {
+      background: #ef4444;
+    }
+
+    .blue-btn {
+      background: #2563eb;
+    }
+
+    .gray-btn {
+      background: #6b7280;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 9px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f9fafb;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .receipt {
+      background: #fffdf2;
+      border: 2px dashed #555;
+      border-radius: 12px;
+      padding: 18px;
+      font-family: "Courier New", monospace;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      min-height: 380px;
+    }
+
+    .summary {
+      background: #eff6ff;
+      border-left: 6px solid #2563eb;
+      border-radius: 16px;
+      padding: 15px;
+      line-height: 1.8;
+      margin-top: 14px;
+    }
+
+    .lesson-box {
+      background: #fff7ed;
+      border-left: 6px solid #f97316;
+      border-radius: 16px;
+      padding: 16px;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    .formula-box {
+      background: #f9fafb;
+      border: 1px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 16px;
+      line-height: 1.8;
+      margin-top: 14px;
+    }
+
+    .highlight {
+      color: #dc2626;
+      font-weight: 900;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .counter {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .counter button {
+      border: none;
+      background: #e5e7eb;
+      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      font-weight: 900;
+    }
+
+    .quiz-choice {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      background: white;
+      border-radius: 12px;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .quiz-choice:hover {
+      background: #f3f4f6;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>마트 영수증 세금 계산 웹툴</h1>
+  <p>장보기 상황에서 부가세, 면세, 개별소비세를 직접 확인해 봅시다.</p>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab(event, 'market')">마트 장보기</button>
+    <button class="tab-btn" onclick="showTab(event, 'special')">개별소비세</button>
+    <button class="tab-btn" onclick="showTab(event, 'lesson')">수업용 활동</button>
+  </div>
+
+  <!-- 마트 장보기 탭 -->
+  <section id="market" class="tab-content active">
+    <div class="layout">
+      <div>
+        <div class="card">
+          <h2>1. 마트에서 물건 고르기</h2>
+          <p>
+            신선 농수산물은 <b>면세</b>, 가공식품이나 생활용품은 <b>과세</b>로 단순화했습니다.
+            실제 세법에는 세부 예외가 있을 수 있습니다.
+          </p>
+
+          <div class="product-grid" id="productGrid"></div>
+        </div>
+
+        <div class="card">
+          <h2>직접 물건 추가하기</h2>
+          <div class="input-grid">
+            <div>
+              <label>물건 이름</label>
+              <input id="customName" placeholder="예: 컵라면" />
+            </div>
+            <div>
+              <label>가격</label>
+              <input id="customPrice" type="number" placeholder="예: 1500" />
+            </div>
+            <div>
+              <label>분류</label>
+              <select id="customTaxType">
+                <option value="taxable">과세 상품</option>
+                <option value="taxfree">면세 상품</option>
+              </select>
+            </div>
+            <div>
+              <button class="main-btn blue-btn" onclick="addCustomProduct()">추가하기</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>2. 장바구니</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>상품</th>
+                <th>구분</th>
+                <th>단가</th>
+                <th>수량</th>
+                <th>금액</th>
+                <th>삭제</th>
+              </tr>
+            </thead>
+            <tbody id="cartBody">
+              <tr>
+                <td colspan="6">아직 담은 물건이 없습니다.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button class="main-btn blue-btn" onclick="printReceipt()">계산대에서 영수증 출력하기</button>
+          <button class="main-btn danger-btn" onclick="clearCart()">장바구니 비우기</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>3. 영수증</h2>
+          <div id="receipt" class="receipt">
+계산 전입니다.
+물건을 담은 뒤
+[계산대에서 영수증 출력하기]를 눌러주세요.
+          </div>
+
+          <div id="summary" class="summary">
+            과세 상품, 면세 상품, 부가세가 따로 표시됩니다.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 개별소비세 탭 -->
+  <section id="special" class="tab-content">
+    <div class="card">
+      <h2>개별소비세 계산기</h2>
+      <p>
+        개별소비세는 특정 물품이나 서비스에 추가로 붙는 세금입니다.
+        수업에서는 “특별한 소비에 붙는 세금” 정도로 이해하면 좋습니다.
+      </p>
+
+      <div class="input-grid">
+        <div>
+          <label>물품 이름</label>
+          <input id="luxuryName" placeholder="예: 고급 가방" value="고급 가방" />
+        </div>
+        <div>
+          <label>기본 가격</label>
+          <input id="luxuryPrice" type="number" value="1000000" />
+        </div>
+        <div>
+          <label>개별소비세율</label>
+          <input id="luxuryRate" type="number" value="5" />
+        </div>
+        <div>
+          <button class="main-btn blue-btn" onclick="calculateLuxuryTax()">계산하기</button>
+        </div>
+      </div>
+
+      <div id="luxuryResult" class="summary">
+        기본 가격과 세율을 입력한 뒤 계산해 보세요.
+      </div>
+
+      <div class="formula-box">
+        <b>공식</b><br>
+        개별소비세 = 기본 가격 × 세율<br>
+        최종 금액 = 기본 가격 + 개별소비세
+      </div>
+    </div>
+  </section>
+
+  <!-- 수업용 활동 탭 -->
+  <section id="lesson" class="tab-content">
+    <div class="card">
+      <h2>수업용 활동 아이디어</h2>
+
+      <div class="lesson-box">
+        <b>활동 1. 과세 상품과 면세 상품 분류하기</b><br>
+        학생들에게 상품 카드를 주고, 과세/면세로 나누게 합니다.<br>
+        예: 사과, 생선, 과자, 샴푸, 라면, 쌀, 휴지
+      </div>
+
+      <div class="lesson-box">
+        <b>활동 2. 같은 10,000원이라도 세금이 다를까?</b><br>
+        10,000원짜리 사과와 10,000원짜리 과자를 비교합니다.<br>
+        사과는 면세, 과자는 과세로 놓고 영수증 차이를 확인합니다.
+      </div>
+
+      <div class="lesson-box">
+        <b>활동 3. 부가세 포함 가격 역산하기</b><br>
+        합계금액이 11,000원인 과세 상품의 공급가액과 부가세를 구해 봅니다.<br>
+        공급가액 = 11,000 ÷ 1.1 = 10,000원
+      </div>
+
+      <div class="lesson-box">
+        <b>활동 4. 일차함수와 연결하기</b><br>
+        과세 상품의 공급가액을 x, 소비자가 내는 금액을 y라고 하면<br>
+        <span class="highlight">y = 1.1x</span> 로 나타낼 수 있습니다.
+      </div>
+
+      <div class="lesson-box">
+        <b>활동 5. 영수증 속 숨은 수학 찾기</b><br>
+        학생들이 직접 장바구니를 만들고, 과세 금액·면세 금액·부가세·총액을 설명하게 합니다.
+      </div>
+
+      <div class="card">
+        <h3>간단 퀴즈</h3>
+        <p><b>문제.</b> 다음 중 수업용 단순화 기준에서 면세 상품으로 보는 것은?</p>
+        <button class="quiz-choice" onclick="checkQuiz(false)">A. 과자</button>
+        <button class="quiz-choice" onclick="checkQuiz(true)">B. 사과</button>
+        <button class="quiz-choice" onclick="checkQuiz(false)">C. 샴푸</button>
+        <button class="quiz-choice" onclick="checkQuiz(false)">D. 탄산음료</button>
+        <div id="quizResult" class="summary">답을 골라보세요.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  const VAT_RATE = 0.1;
+
+  const products = [
+    { id: 1, name: "사과", emoji: "🍎", price: 3000, taxType: "taxfree", category: "신선 농산물" },
+    { id: 2, name: "쌀", emoji: "🍚", price: 12000, taxType: "taxfree", category: "농산물" },
+    { id: 3, name: "고등어", emoji: "🐟", price: 7000, taxType: "taxfree", category: "수산물" },
+    { id: 4, name: "상추", emoji: "🥬", price: 2500, taxType: "taxfree", category: "채소" },
+    { id: 5, name: "과자", emoji: "🍪", price: 2200, taxType: "taxable", category: "가공식품" },
+    { id: 6, name: "라면", emoji: "🍜", price: 1000, taxType: "taxable", category: "가공식품" },
+    { id: 7, name: "탄산음료", emoji: "🥤", price: 1800, taxType: "taxable", category: "가공식품" },
+    { id: 8, name: "샴푸", emoji: "🧴", price: 8500, taxType: "taxable", category: "생활용품" },
+    { id: 9, name: "휴지", emoji: "🧻", price: 6000, taxType: "taxable", category: "생활용품" },
+    { id: 10, name: "초콜릿", emoji: "🍫", price: 1500, taxType: "taxable", category: "가공식품" }
+  ];
+
+  let cart = [];
+
+  function showTab(event, tabId) {
+    const tabs = document.querySelectorAll(".tab-content");
+    const buttons = document.querySelectorAll(".tab-btn");
+
+    tabs.forEach(tab => tab.classList.remove("active"));
+    buttons.forEach(btn => btn.classList.remove("active"));
+
+    document.getElementById(tabId).classList.add("active");
+    event.target.classList.add("active");
+  }
+
+  function formatWon(value) {
+    return Math.round(value).toLocaleString("ko-KR") + "원";
+  }
+
+  function renderProducts() {
+    const grid = document.getElementById("productGrid");
+    grid.innerHTML = "";
+
+    products.forEach(product => {
+      const badgeClass = product.taxType === "taxfree" ? "taxfree" : "taxable";
+      const badgeText = product.taxType === "taxfree" ? "면세" : "과세";
+
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <div class="emoji">${product.emoji}</div>
+        <div class="product-name">${product.name}</div>
+        <div class="small">${product.category}</div>
+        <div class="product-price">${formatWon(product.price)}</div>
+        <span class="badge ${badgeClass}">${badgeText}</span>
+        <button class="add-btn" onclick="addToCart(${product.id})">담기</button>
+      `;
+      grid.appendChild(div);
+    });
+  }
+
+  function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const existing = cart.find(item => item.id === productId);
+
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ ...product, qty: 1 });
+    }
+
+    renderCart();
+  }
+
+  function addCustomProduct() {
+    const name = document.getElementById("customName").value.trim();
+    const price = Number(document.getElementById("customPrice").value);
+    const taxType = document.getElementById("customTaxType").value;
+
+    if (!name) {
+      alert("물건 이름을 입력해주세요.");
+      return;
+    }
+
+    if (!price || price <= 0) {
+      alert("가격은 0보다 큰 수로 입력해주세요.");
+      return;
+    }
+
+    const newProduct = {
+      id: Date.now(),
+      name,
+      emoji: "🛒",
+      price,
+      taxType,
+      category: taxType === "taxfree" ? "직접 추가 면세 상품" : "직접 추가 과세 상품"
+    };
+
+    products.push(newProduct);
+    renderProducts();
+
+    document.getElementById("customName").value = "";
+    document.getElementById("customPrice").value = "";
+  }
+
+  function renderCart() {
+    const tbody = document.getElementById("cartBody");
+
+    if (cart.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6">아직 담은 물건이 없습니다.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = "";
+
+    cart.forEach(item => {
+      const badgeText = item.taxType === "taxfree" ? "면세" : "과세";
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${item.emoji} ${item.name}</td>
+        <td>${badgeText}</td>
+        <td>${formatWon(item.price)}</td>
+        <td>
+          <div class="counter">
+            <button onclick="changeQty(${item.id}, -1)">-</button>
+            <b>${item.qty}</b>
+            <button onclick="changeQty(${item.id}, 1)">+</button>
+          </div>
+        </td>
+        <td>${formatWon(item.price * item.qty)}</td>
+        <td><button onclick="removeItem(${item.id})">삭제</button></td>
+      `;
+
+      tbody.appendChild(row);
+    });
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+
+    item.qty += delta;
+
+    if (item.qty <= 0) {
+      cart = cart.filter(i => i.id !== id);
+    }
+
+    renderCart();
+  }
+
+  function removeItem(id) {
+    cart = cart.filter(item => item.id !== id);
+    renderCart();
+  }
+
+  function clearCart() {
+    cart = [];
+    renderCart();
+    document.getElementById("receipt").textContent =
+`계산 전입니다.
+물건을 담은 뒤
+[계산대에서 영수증 출력하기]를 눌러주세요.`;
+
+    document.getElementById("summary").innerHTML =
+      "과세 상품, 면세 상품, 부가세가 따로 표시됩니다.";
+  }
+
+  function printReceipt() {
+    if (cart.length === 0) {
+      alert("장바구니에 물건을 먼저 담아주세요.");
+      return;
+    }
+
+    let taxableTotal = 0;
+    let taxfreeTotal = 0;
+    let itemLines = "";
+
+    cart.forEach(item => {
+      const lineTotal = item.price * item.qty;
+
+      if (item.taxType === "taxable") {
+        taxableTotal += lineTotal;
+      } else {
+        taxfreeTotal += lineTotal;
+      }
+
+      const mark = item.taxType === "taxable" ? "과세" : "면세";
+      itemLines += `${item.name.padEnd(8, " ")} ${mark}  ${item.qty}개  ${formatWon(lineTotal)}\n`;
+    });
+
+    const vat = taxableTotal * VAT_RATE;
+    const total = taxableTotal + taxfreeTotal + vat;
+
+    const now = new Date();
+    const dateText = now.toLocaleString("ko-KR");
+
+    const receiptText =
+`================================
+        수업마트 영수증
+================================
+${dateText}
+
+상품명       구분  수량  금액
+--------------------------------
+${itemLines}
+--------------------------------
+과세 상품 합계     ${formatWon(taxableTotal)}
+면세 상품 합계     ${formatWon(taxfreeTotal)}
+부가세 10%         ${formatWon(vat)}
+--------------------------------
+최종 결제 금액     ${formatWon(total)}
+================================
+※ 면세 상품에는 부가세가 붙지 않습니다.
+※ 과세 상품에만 10% 부가세를 계산했습니다.
+`;
+
+    document.getElementById("receipt").textContent = receiptText;
+
+    document.getElementById("summary").innerHTML = `
+      <b>계산 요약</b><br>
+      과세 상품 합계: ${formatWon(taxableTotal)}<br>
+      면세 상품 합계: ${formatWon(taxfreeTotal)}<br>
+      부가세: ${formatWon(vat)}<br>
+      최종 결제 금액: <span class="highlight">${formatWon(total)}</span><br><br>
+      계산식: 과세 상품 합계 × 10% = 부가세<br>
+      ${formatWon(taxableTotal)} × 10% = ${formatWon(vat)}
+    `;
+  }
+
+  function calculateLuxuryTax() {
+    const name = document.getElementById("luxuryName").value.trim() || "물품";
+    const price = Number(document.getElementById("luxuryPrice").value);
+    const rate = Number(document.getElementById("luxuryRate").value);
+    const result = document.getElementById("luxuryResult");
+
+    if (!price || price <= 0) {
+      result.innerHTML = "기본 가격은 0보다 큰 수로 입력해주세요.";
+      return;
+    }
+
+    if (rate < 0) {
+      result.innerHTML = "세율은 0 이상으로 입력해주세요.";
+      return;
+    }
+
+    const tax = price * rate / 100;
+    const total = price + tax;
+
+    result.innerHTML = `
+      <b>${name} 계산 결과</b><br>
+      기본 가격: ${formatWon(price)}<br>
+      개별소비세율: ${rate}%<br>
+      개별소비세: <span class="highlight">${formatWon(tax)}</span><br>
+      최종 금액: ${formatWon(total)}<br><br>
+      계산식: ${formatWon(price)} × ${rate}% = ${formatWon(tax)}
+    `;
+  }
+
+  function checkQuiz(isCorrect) {
+    const result = document.getElementById("quizResult");
+
+    if (isCorrect) {
+      result.innerHTML = "정답입니다. 사과 같은 신선 농산물은 수업용 기준에서 면세 상품으로 볼 수 있습니다.";
+    } else {
+      result.innerHTML = "아쉬워요. 과자, 샴푸, 탄산음료는 수업용 기준에서 과세 상품으로 분류했습니다.";
+    }
+  }
+
+  renderProducts();
+  renderCart();
+</script>
+</body>
+</html>

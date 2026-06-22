@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>밴드 합주 웹툴 | 한 페이지가 될 수 있게</title>
+  <style>
+    :root{
+      --bg:#f7fbf6; --paper:#ffffff; --ink:#203432; --muted:#5f706c;
+      --green:#0a8f78; --mint:#dff5ec; --mint2:#eef9f3; --yellow:#ffe58a;
+      --orange:#ff9d67; --pink:#ff82a9; --blue:#7db7ff; --purple:#b893ff;
+      --line:#d9e8df; --shadow: 0 14px 35px rgba(23,70,59,.13);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top left,#e1f7ed 0,#f9fbf7 34%,#f7f4ff 100%);color:var(--ink);}
+    .top{position:sticky;top:0;z-index:40;backdrop-filter: blur(12px);background:rgba(247,251,246,.83);border-bottom:1px solid rgba(217,232,223,.8)}
+    .nav{max-width:1180px;margin:auto;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 18px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900;color:var(--green)}
+    .logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,var(--green),#14c69f);display:grid;place-items:center;color:white;box-shadow:var(--shadow)}
+    .links{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .links a,.miniBtn{border:1px solid var(--line);background:white;color:var(--ink);text-decoration:none;border-radius:999px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 5px 12px rgba(0,0,0,.04)}
+    .links a:hover,.miniBtn:hover{transform:translateY(-1px);border-color:#97d8c5}
+    main{max-width:1180px;margin:auto;padding:26px 18px 90px}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:stretch}
+    .card{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;position:relative;overflow:hidden}
+    .hero h1{font-size:clamp(32px,5vw,62px);line-height:1.04;margin:6px 0 14px;letter-spacing:-.04em}
+    .hero p{font-size:18px;line-height:1.65;color:var(--muted);margin:0 0 14px}
+    .badge{display:inline-flex;align-items:center;gap:7px;background:var(--mint);color:#096b5b;border:1px solid #bde6d8;border-radius:999px;padding:8px 12px;font-weight:900;margin:4px 6px 6px 0}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    button{font:inherit;border:none;cursor:pointer}
+    .primary{background:linear-gradient(135deg,var(--green),#12bd9a);color:white;border-radius:16px;padding:13px 17px;font-weight:900;box-shadow:0 10px 20px rgba(10,143,120,.24)}
+    .secondary{background:white;border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:13px 17px;font-weight:900}
+    .primary:active,.secondary:active,.miniBtn:active{transform:scale(.98)}
+    .stage{min-height:405px;background:linear-gradient(180deg,#fcfff9,#effaf2);border-radius:22px;border:1px solid var(--line);position:relative;overflow:hidden}
+    .stage:before{content:"";position:absolute;left:9%;right:9%;bottom:34px;height:100px;border-radius:50%;background:rgba(10,143,120,.13)}
+    .stage-title{position:absolute;top:16px;left:18px;font-weight:900;color:#096b5b;z-index:2}.stage-tip{position:absolute;top:45px;left:18px;right:18px;color:var(--muted);font-size:13px;z-index:2}
+    .member{position:absolute;width:92px;height:112px;display:grid;place-items:center;text-align:center;font-weight:900;border-radius:24px;background:white;border:2px solid #cfe9df;box-shadow:0 12px 20px rgba(30,84,76,.14);user-select:none;touch-action:none;transition:box-shadow .2s, border-color .2s}
+    .member .emoji{font-size:38px;display:block;filter:drop-shadow(0 4px 0 rgba(0,0,0,.05))}.member small{font-size:12px;color:var(--muted);display:block;margin-top:4px}.member.active{border-color:var(--orange);box-shadow:0 0 0 7px rgba(255,157,103,.19),0 12px 20px rgba(30,84,76,.18)}
+    #mVocal{left:43%;top:84px}#mGuitar{left:18%;top:165px}#mBass{left:58%;top:182px}#mKeyboard{left:37%;top:248px}#mDrum{left:72%;top:82px}
+    section{margin-top:22px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}.section-title h2{font-size:28px;margin:0;letter-spacing:-.03em}.section-title span{color:var(--muted);font-weight:700}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-12{grid-column:span 12}
+    .role{min-height:210px}.role h3{margin:4px 0 10px;font-size:22px}.role p{color:var(--muted);line-height:1.55;margin:0 0 13px}.roleIcon{font-size:44px}.tag{display:inline-block;border-radius:999px;background:var(--mint2);border:1px solid var(--line);padding:6px 9px;font-size:13px;font-weight:900;color:#287464;margin:3px}
+    .controlPanel{display:grid;grid-template-columns:1fr 1fr;gap:14px}.controlBox{background:#f8fcfa;border:1px solid var(--line);border-radius:18px;padding:16px}.controlBox label{font-weight:900;display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}.controlBox input[type=range]{width:100%;accent-color:var(--green)}
+    .meter{height:10px;border-radius:999px;background:#e7efe9;overflow:hidden}.meter>div{height:100%;width:40%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--yellow),var(--orange));transition:width .15s}
+    .transport{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.status{padding:9px 12px;border-radius:999px;background:#ecf8f3;color:#0b6b5c;font-weight:900}.select{border:1px solid var(--line);background:white;border-radius:14px;padding:12px;font-weight:800;color:var(--ink)}
+    .progressWrap{height:16px;background:#e8f1ec;border-radius:999px;overflow:hidden;margin-top:12px}.progress{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));transition:width .08s linear}
+    .pads{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.pad{min-height:82px;border-radius:18px;border:2px solid #cde7dd;background:white;font-weight:900;box-shadow:0 8px 14px rgba(0,0,0,.05)}.pad small{display:block;color:var(--muted);font-weight:700;margin-top:5px}.pad.hit{background:#fff5ce;border-color:#ffc94a;animation:bump .22s}@keyframes bump{50%{transform:scale(1.04)}}
+    .chordInfo{background:linear-gradient(135deg,#fff,#f2fff8);border:1px solid var(--line);border-radius:18px;padding:16px;margin-top:12px;min-height:88px}.chordInfo strong{color:var(--green)}
+    .fretboard{display:grid;grid-template-columns:50px repeat(4,1fr);gap:0;border:1px solid #cfe6df;border-radius:14px;overflow:hidden;background:white;margin-top:10px}.fretboard div{min-height:36px;border-right:1px solid #e4eee9;border-bottom:1px solid #e4eee9;display:grid;place-items:center;font-weight:800;font-size:12px}.dot{width:20px;height:20px;border-radius:50%;background:var(--purple);color:white;display:grid;place-items:center;font-size:11px}.open{color:var(--green)}.mute{color:#c44}
+    .sequencer{display:grid;gap:8px}.seqRow{display:grid;grid-template-columns:78px repeat(8,1fr);gap:6px;align-items:center}.seqName{font-weight:900}.step{height:38px;border-radius:11px;background:#edf4f0;border:1px solid #d6e8df}.step.on{background:var(--green);border-color:#087664}.step.now{box-shadow:0 0 0 4px rgba(255,229,138,.9)}
+    .challengeList{display:grid;gap:10px}.mission{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--line);border-radius:18px;background:white}.mission input{width:22px;height:22px;accent-color:var(--green)}.mission b{display:block}.mission small{color:var(--muted)}
+    .rubric{width:100%;border-collapse:separate;border-spacing:0 9px}.rubric th{font-size:13px;color:var(--muted);text-align:center}.rubric td{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px}.rubric td:first-child{border-left:1px solid var(--line);border-radius:14px 0 0 14px;font-weight:900}.rubric td:last-child{border-right:1px solid var(--line);border-radius:0 14px 14px 0;text-align:center}.rubric input{width:20px;height:20px;accent-color:var(--green)}
+    textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:14px;padding:12px;font:inherit;background:white}textarea{min-height:100px;resize:vertical}.logBox{background:#f7fcf9;border:1px solid var(--line);border-radius:18px;padding:14px;white-space:pre-wrap;color:var(--muted);min-height:100px}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(100px);background:#203432;color:white;padding:13px 16px;border-radius:999px;box-shadow:var(--shadow);z-index:100;transition:.3s;font-weight:900}.toast.show{transform:translateX(-50%) translateY(0)}
+    .confetti{position:fixed;width:10px;height:14px;border-radius:3px;top:-20px;z-index:99;animation:fall 1.8s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(600deg);opacity:.2}}
+    .note{font-size:13px;color:var(--muted);line-height:1.5}.copyright{background:#fff9e3;border:1px solid #ffe28a;border-radius:18px;padding:14px;color:#69541c;font-weight:700}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-12{grid-column:span 1}.pads{grid-template-columns:repeat(2,1fr)}.controlPanel{grid-template-columns:1fr}.stage{min-height:440px}.member{width:86px;height:104px}.links{display:none}.seqRow{grid-template-columns:62px repeat(8,1fr);gap:4px}.step{height:34px}}
+    @media print{.top,.transport,.primary,.secondary,.miniBtn{display:none}.card{box-shadow:none;break-inside:avoid}body{background:white}main{padding:0}}
+  </style>
+</head>
+<body>
+  <div class="top"><div class="nav"><div class="brand"><div class="logo">♫</div><div>밴드 합주 웹툴</div></div><div class="links"><a href="#roles">파트</a><a href="#mixer">합주실</a><a href="#chords">코드</a><a href="#rhythm">리듬</a><a href="#mission">미션</a><a href="#report">평가</a></div></div></div>
+  <main>
+    <div class="hero">
+      <div class="card">
+        <span class="badge">🎸 74~77쪽 밴드 합주</span><span class="badge">🎧 시각·청각 활동</span><span class="badge">🕹️ 학생 조작형</span>
+        <h1>우리 반의 오늘을<br>한 페이지의 합주로 만들기</h1>
+        <p>각 파트의 역할을 듣고, 코드와 리듬을 직접 조작하면서 밴드 합주의 핵심을 익히는 수업용 웹툴입니다. 원곡 악보를 그대로 재현하지 않고, 수업용 코드·리듬 루프로 개념을 탐구하도록 구성했습니다.</p>
+        <div class="cta"><button class="primary" id="startAudio">🔊 소리 켜고 시작</button><button class="secondary" onclick="document.querySelector('#mixer').scrollIntoView()">🎚️ 합주실로 이동</button><button class="secondary" id="resetAll">♻️ 활동 초기화</button></div>
+        <p class="copyright" style="margin-top:18px">수업 안내: 이 도구의 음원은 웹 오디오로 만든 짧은 교육용 연습 루프입니다. 실제 원곡 음원·전체 악보·가사는 포함하지 않았습니다.</p>
+      </div>
+      <div class="stage" id="stage">
+        <div class="stage-title">드래그 가능한 스쿨밴드 무대</div><div class="stage-tip">멤버를 옮겨 배치하고, 파트를 눌러 역할을 확인해 보세요.</div>
+        <div class="member" id="mVocal" data-role="vocal"><span><span class="emoji">🎤</span>보컬<small>가락·가사 전달</small></span></div>
+        <div class="member" id="mGuitar" data-role="guitar"><span><span class="emoji">🎸</span>기타<small>코드·리듬</small></span></div>
+        <div class="member" id="mBass" data-role="bass"><span><span class="emoji">🪕</span>베이스<small>저음 뿌리</small></span></div>
+        <div class="member" id="mKeyboard" data-role="keyboard"><span><span class="emoji">🎹</span>건반<small>화성 채움</small></span></div>
+        <div class="member" id="mDrum" data-role="drum"><span><span class="emoji">🥁</span>드럼<small>박자·필인</small></span></div>
+      </div>
+    </div>
+
+    <section id="roles"><div class="section-title"><h2>1. 파트 역할 탐험</h2><span>밴드는 ‘각자 잘하기’보다 ‘서로 듣기’가 핵심</span></div>
+      <div class="grid">
+        <div class="card role col-3"><div class="roleIcon">🎤</div><h3>보컬</h3><p>곡의 메시지와 가락선을 전달합니다. 너무 앞서거나 묻히지 않도록 밴드 소리를 들으며 호흡합니다.</p><span class="tag">멜로디</span><span class="tag">표현</span></div>
+        <div class="card role col-3"><div class="roleIcon">🎸</div><h3>기타</h3><p>C, D, Em, G, A 등 코드로 곡의 색을 만듭니다. 다운·업 스트로크가 리듬감을 살립니다.</p><span class="tag">코드</span><span class="tag">스트로크</span></div>
+        <div class="card role col-3"><div class="roleIcon">🎹</div><h3>건반</h3><p>코드 구성음을 눌러 화성을 채우고, 분산화음·패드 소리로 분위기를 부드럽게 연결합니다.</p><span class="tag">화성</span><span class="tag">배경</span></div>
+        <div class="card role col-3"><div class="roleIcon">🥁</div><h3>드럼·베이스</h3><p>드럼은 시간의 뼈대를, 베이스는 코드의 뿌리를 잡습니다. 둘이 안정되면 합주가 단단해집니다.</p><span class="tag">그루브</span><span class="tag">저음</span></div>
+      </div>
+    </section>
+
+    <section id="mixer"><div class="section-title"><h2>2. 인터랙티브 합주실</h2><span>템포·섹션·파트 볼륨을 바꾸며 소리의 균형 찾기</span></div>
+      <div class="grid">
+        <div class="card col-7">
+          <div class="transport"><button class="primary" id="playBtn">▶ 재생</button><button class="secondary" id="fillBtn">🥁 필인 넣기</button><button class="secondary" id="muteBtn">🤫 전체 음소거</button><select class="select" id="sectionSelect"><option value="verse">벌스 Verse</option><option value="pre">프리코러스 Pre-Chorus</option><option value="chorus">코러스 Chorus</option></select><span class="status" id="nowStatus">대기 중</span></div>
+          <div class="progressWrap"><div class="progress" id="progress"></div></div>
+          <div class="controlPanel" style="margin-top:16px">
+            <div class="controlBox"><label>BPM <span id="bpmVal">112</span></label><input type="range" min="72" max="150" value="112" id="bpm"></div>
+            <div class="controlBox"><label>합주 에너지 <span id="energyVal">중간</span></label><input type="range" min="1" max="5" value="3" id="energy"></div>
+            <div class="controlBox"><label>🎤 보컬 멜로디 <span id="vocalVal">70%</span></label><input data-track="vocal" type="range" min="0" max="100" value="70"><div class="meter"><div id="meterVocal"></div></div></div>
+            <div class="controlBox"><label>🎸 기타 코드 <span id="guitarVal">70%</span></label><input data-track="guitar" type="range" min="0" max="100" value="70"><div class="meter"><div id="meterGuitar"></div></div></div>
+            <div class="controlBox"><label>🎹 건반 패드 <span id="keyboardVal">55%</span></label><input data-track="keyboard" type="range" min="0" max="100" value="55"><div class="meter"><div id="meterKeyboard"></div></div></div>
+            <div class="controlBox"><label>🥁 드럼·베이스 <span id="drumVal">80%</span></label><input data-track="drum" type="range" min="0" max="100" value="80"><div class="meter"><div id="meterDrum"></div></div></div>
+          </div>
+        </div>
+        <div class="card col-5">
+          <h3 style="margin-top:0">섹션별 합주 포인트</h3>
+          <div id="sectionGuide" class="logBox"></div>
+          <h3>오늘의 듣기 질문</h3>
+          <p class="note">① 보컬을 살리려면 어떤 파트를 줄여야 할까?<br>② 코러스에서 에너지가 커지는 이유는 무엇일까?<br>③ 드럼 필인은 곡의 어느 순간에 어울릴까?</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="chords"><div class="section-title"><h2>3. 코드 패드 & 기타 코드 미니 실험실</h2><span>누르면 코드가 울리고 구성음이 보입니다</span></div>
+      <div class="grid">
+        <div class="card col-6"><div class="pads" id="chordPads"></div><div class="chordInfo" id="chordInfo">코드를 눌러 보세요. 같은 C라도 기타·건반·베이스에서 맡는 역할이 달라집니다.</div></div>
+        <div class="card col-6"><h3 style="margin-top:0">기타 코드표 읽기</h3><p class="note">세로줄은 기타 줄, 가로줄은 프렛입니다. ○은 개방현, ×은 치지 않는 줄입니다. 교과서 75쪽의 코드표 학습을 조작형으로 바꾼 활동입니다.</p><select class="select" id="diagramSelect"></select><div class="fretboard" id="fretboard"></div></div>
+      </div>
+    </section>
+
+    <section id="rhythm"><div class="section-title"><h2>4. 리듬 메이커</h2><span>8칸을 켜고 끄며 4비트·8비트·필인을 비교</span></div>
+      <div class="grid"><div class="card col-8"><div class="sequencer" id="sequencer"></div><div class="cta"><button class="primary" id="seqPlay">▶ 리듬만 재생</button><button class="secondary" id="preset4">4비트</button><button class="secondary" id="preset8">8비트</button><button class="secondary" id="presetFill">필인</button></div></div><div class="card col-4"><h3 style="margin-top:0">리듬 듣기 포인트</h3><p class="note">하이햇은 시간을 촘촘하게 나누고, 베이스 드럼은 몸이 움직이는 지점을 만듭니다. 스네어는 강세를 만들어 음악이 앞으로 나아가게 합니다.</p><div class="logBox" id="rhythmExplain">프리셋을 눌러 패턴을 비교해 보세요.</div></div></div>
+    </section>
+
+    <section id="mission"><div class="section-title"><h2>5. 합주 미션 카드</h2><span>학생 활동을 게임처럼 진행</span></div>
+      <div class="grid"><div class="card col-6"><div class="challengeList">
+        <label class="mission"><input type="checkbox"><span><b>미션 1: 파트 균형 찾기</b><small>보컬이 잘 들리도록 기타·건반·드럼 볼륨을 조절한다.</small></span></label>
+        <label class="mission"><input type="checkbox"><span><b>미션 2: 코드 루트 듣기</b><small>베이스가 코드의 첫 음을 담당할 때 안정감이 생기는지 듣는다.</small></span></label>
+        <label class="mission"><input type="checkbox"><span><b>미션 3: 섹션 대비 만들기</b><small>벌스는 작게, 코러스는 크게 만들어 분위기 변화를 설명한다.</small></span></label>
+        <label class="mission"><input type="checkbox"><span><b>미션 4: 우리 반 필인 만들기</b><small>리듬 메이커에서 마지막 2박에 변화를 넣어 본다.</small></span></label>
+      </div></div><div class="card col-6"><h3 style="margin-top:0">무대 연출 보너스</h3><p class="note">드래그 무대에서 보컬은 중앙, 드럼은 뒤쪽, 기타·건반·베이스는 좌우에 배치해 보세요. 실제 공연처럼 서로의 소리를 들을 수 있는 위치를 토론하면 좋습니다.</p><button class="primary" id="randomStage">🎲 무대 랜덤 배치</button><button class="secondary" id="confettiBtn">🎉 발표 성공 효과</button></div></div>
+    </section>
+
+    <section id="report"><div class="section-title"><h2>6. 연습 일지 & 자기평가</h2><span>수업 마무리용</span></div>
+      <div class="grid"><div class="card col-6"><h3 style="margin-top:0">연습 일지</h3><input type="text" id="teamName" placeholder="팀 이름"><br><br><textarea id="journal" placeholder="오늘 우리 팀이 잘 맞은 부분, 더 연습할 부분, 다음 합주 목표를 적어 보세요."></textarea><div class="cta"><button class="primary" id="saveJournal">💾 저장</button><button class="secondary" onclick="window.print()">🖨️ 인쇄/PDF 저장</button></div><div class="logBox" id="savedLog" style="margin-top:12px">저장된 일지가 여기에 표시됩니다.</div></div>
+      <div class="card col-6"><h3 style="margin-top:0">평가하기</h3><table class="rubric"><thead><tr><th></th><th>최고야</th><th>잘했어</th><th>아쉬워</th></tr></thead><tbody><tr><td>파트의 역할과 코드 진행을 이해했는가?</td><td><input name="r1" type="radio"></td><td><input name="r1" type="radio"></td><td><input name="r1" type="radio"></td></tr><tr><td>템포와 박자를 유지하며 합주에 참여했는가?</td><td><input name="r2" type="radio"></td><td><input name="r2" type="radio"></td><td><input name="r2" type="radio"></td></tr><tr><td>서로의 소리를 듣고 균형을 조절했는가?</td><td><input name="r3" type="radio"></td><td><input name="r3" type="radio"></td><td><input name="r3" type="radio"></td></tr></tbody></table><p class="note">교사용 팁: 합주 점수보다 “어떤 소리를 듣고 조절했는가”를 말하게 하면 음악적 사고가 잘 드러납니다.</p></div></div>
+    </section>
+  </main>
+  <div class="toast" id="toast">완료!</div>
+<script>
+const chordData={
+ C:{notes:['C','E','G'],freq:[261.63,329.63,392.00],desc:'C 메이저: 밝고 안정적인 출발점. 코러스 전후의 중심을 잡기 좋습니다.',strings:['x','3','2','0','1','0']},
+ D:{notes:['D','F#','A'],freq:[293.66,369.99,440.00],desc:'D 메이저: 앞으로 나아가는 느낌. 6번 줄은 치지 않으면 소리가 깔끔합니다.',strings:['x','x','0','2','3','2']},
+ Em:{notes:['E','G','B'],freq:[329.63,392.00,493.88],desc:'Em 마이너: 부드럽고 살짝 진지한 색. 벌스에서 감정을 만들기 좋습니다.',strings:['0','2','2','0','0','0']},
+ Em7:{notes:['E','G','B','D'],freq:[329.63,392.00,493.88,587.33],desc:'Em7: Em에 D가 더해져 조금 더 열린 느낌을 냅니다.',strings:['0','2','2','0','3','0']},
+ 'F#':{notes:['F#','A#','C#'],freq:[369.99,466.16,554.37],desc:'F# 메이저: 색채 변화가 큰 코드. 다음 코드로 이동하는 긴장감을 만듭니다.',strings:['2','4','4','3','2','2']},
+ 'F#m':{notes:['F#','A','C#'],freq:[369.99,440.00,554.37],desc:'F#m: 차분하고 깊은 느낌. 밝은 코드 사이에서 감정을 눌러 줍니다.',strings:['2','4','4','2','2','2']},
+ G:{notes:['G','B','D'],freq:[392.00,493.88,587.33],desc:'G 메이저: 넓고 시원한 느낌. 밴드 사운드를 크게 열어 줍니다.',strings:['3','2','0','0','0','3']},
+ A:{notes:['A','C#','E'],freq:[440.00,554.37,659.25],desc:'A 메이저: 에너지를 끌어올리는 코드. 프리코러스에서 힘을 모으기 좋습니다.',strings:['x','0','2','2','2','0']},
+ 'BbM7':{notes:['Bb','D','F','A'],freq:[466.16,587.33,698.46,880.00],desc:'BbM7: 따뜻하고 세련된 화성. 예상 밖의 색채를 더합니다.',strings:['x','1','3','2','3','1']},
+ Bm:{notes:['B','D','F#'],freq:[493.88,587.33,739.99],desc:'Bm: 단단하지만 서정적인 마이너 코드. 감정선을 묶어 줍니다.',strings:['x','2','4','4','3','2']}
+};
+const progressions={verse:['G','D','Em','C'],pre:['G','D','Em7','C','A','D'],chorus:['G','D','Em7','C','G','D','C','D']};
+const guides={verse:'벌스 Verse\n- 이야기가 시작되는 부분입니다.\n- 드럼과 기타를 조금 줄이고 보컬/가락이 잘 들리게 해 보세요.\n- 추천: 에너지 2~3, BPM은 천천히 확인.',pre:'프리코러스 Pre-Chorus\n- 코러스로 넘어가기 전 긴장감을 쌓습니다.\n- 건반과 베이스를 조금 올리면 코드 변화가 잘 들립니다.\n- 추천: 마지막 마디에 필인 넣기.',chorus:'코러스 Chorus\n- 가장 기억에 남는 중심 부분입니다.\n- 드럼과 기타를 키워 넓은 사운드를 만들되, 보컬이 묻히지 않게 조절하세요.\n- 추천: 에너지 4~5.'};
+let audioCtx, master, isPlaying=false, muted=false, timer=null, stepIndex=0, barProgress=0, seqTimer=null, seqStep=0;
+const vols={vocal:.7,guitar:.7,keyboard:.55,drum:.8};
+function ensureAudio(){if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();master=audioCtx.createGain();master.gain.value=.7;master.connect(audioCtx.destination)} if(audioCtx.state==='suspended')audioCtx.resume();}
+function envGain(t,dur=0.22,level=.25){const g=audioCtx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(level,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+dur);return g}
+function tone(freq,t,dur=.25,type='sine',level=.18){const o=audioCtx.createOscillator(), g=envGain(t,dur,level);o.type=type;o.frequency.setValueAtTime(freq,t);o.connect(g);g.connect(master);o.start(t);o.stop(t+dur+.03)}
+function noise(t,dur=.08,level=.18){const buffer=audioCtx.createBuffer(1,audioCtx.sampleRate*dur,audioCtx.sampleRate);const data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;const src=audioCtx.createBufferSource();src.buffer=buffer;const g=envGain(t,dur,level);src.connect(g);g.connect(master);src.start(t)}
+function kick(t,level=.5){tone(95,t,.12,'sine',level);tone(50,t+.03,.18,'sine',level*.55)}
+function snare(t,level=.3){noise(t,.09,level);tone(180,t,.07,'triangle',level*.25)}
+function hat(t,level=.12){noise(t,.035,level)}
+function playChord(name,t,dur=.55,track='guitar'){const ch=chordData[name];if(!ch)return;const level=(vols[track]||.5)*.09;ch.freq.forEach((f,i)=>tone(f*(track==='keyboard'?.5:1),t+i*.012,dur,track==='keyboard'?'sine':'triangle',level));}
+function playMelody(name,t){const ch=chordData[name]; if(!ch)return; tone(ch.freq[1]*2,t,.18,'sine',vols.vocal*.08); tone(ch.freq[2]*2,t+.22,.2,'sine',vols.vocal*.07)}
+function playLoopStep(){ensureAudio(); if(!isPlaying)return; const bpm=+document.getElementById('bpm').value; const beat=60/bpm; const sec=document.getElementById('sectionSelect').value; const prog=progressions[sec]; const chord=prog[stepIndex%prog.length]; const t=audioCtx.currentTime+.02; highlightPad(chord); document.getElementById('nowStatus').textContent=`${secName(sec)} | ${chord}`; playChord(chord,t,beat*.9,'guitar'); if(stepIndex%2===0)playChord(chord,t,beat*1.8,'keyboard'); playMelody(chord,t); kick(t,vols.drum*.35); hat(t,vols.drum*.12); if(stepIndex%2===1)snare(t,vols.drum*.26); barProgress=(stepIndex+1)/prog.length*100; document.getElementById('progress').style.width=barProgress+'%'; stepIndex=(stepIndex+1)%prog.length; timer=setTimeout(playLoopStep,beat*1000);}
+function secName(s){return s==='verse'?'벌스':s==='pre'?'프리코러스':'코러스'}
+function highlightPad(chord){document.querySelectorAll('.pad').forEach(p=>p.classList.toggle('hit',p.dataset.chord===chord));setTimeout(()=>document.querySelectorAll('.pad').forEach(p=>p.classList.remove('hit')),240)}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800)}
+function updateGuide(){const sec=document.getElementById('sectionSelect').value;document.getElementById('sectionGuide').textContent=guides[sec]}
+function renderPads(){const wrap=document.getElementById('chordPads');Object.keys(chordData).forEach(name=>{const b=document.createElement('button');b.className='pad';b.dataset.chord=name;b.innerHTML=`${name}<small>${chordData[name].notes.join(' · ')}</small>`;b.onclick=()=>{ensureAudio();playChord(name,audioCtx.currentTime+.02,.8,'guitar');showChord(name);highlightPad(name)};wrap.appendChild(b)});const sel=document.getElementById('diagramSelect');Object.keys(chordData).forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;sel.appendChild(o)});sel.onchange=()=>renderFret(sel.value);showChord('G');renderFret('G')}
+function showChord(name){const ch=chordData[name];document.getElementById('chordInfo').innerHTML=`<strong>${name}</strong> 구성음: ${ch.notes.join(' · ')}<br>${ch.desc}`;document.getElementById('diagramSelect').value=name;renderFret(name)}
+function renderFret(name){const s=chordData[name].strings;const fb=document.getElementById('fretboard');fb.innerHTML='';['줄/프렛','0','1','2','3'].forEach(x=>{let d=document.createElement('div');d.textContent=x;fb.appendChild(d)});s.forEach((val,i)=>{let lab=document.createElement('div');lab.textContent=(6-i)+'번 줄';fb.appendChild(lab);for(let f=0;f<4;f++){let cell=document.createElement('div');if(val==='x'&&f===0)cell.innerHTML='<span class="mute">×</span>';else if(val==='0'&&f===0)cell.innerHTML='<span class="open">○</span>';else if(String(f)===val)cell.innerHTML='<span class="dot">●</span>';fb.appendChild(cell)}})}
+const seq={kick:[1,0,0,0,1,0,0,0],snare:[0,0,1,0,0,0,1,0],hat:[1,1,1,1,1,1,1,1]};
+function renderSeq(){const wrap=document.getElementById('sequencer');wrap.innerHTML='';[['kick','베이스'],['snare','스네어'],['hat','하이햇']].forEach(([key,name])=>{const row=document.createElement('div');row.className='seqRow';row.innerHTML=`<div class="seqName">${name}</div>`;for(let i=0;i<8;i++){const b=document.createElement('button');b.className='step '+(seq[key][i]?'on':'');b.dataset.row=key;b.dataset.i=i;b.onclick=()=>{seq[key][i]=seq[key][i]?0:1;renderSeq()};row.appendChild(b)}wrap.appendChild(row)})}
+function playSeqStep(){ensureAudio();const bpm=+document.getElementById('bpm').value;const beat=60/bpm/2;const t=audioCtx.currentTime+.02;document.querySelectorAll('.step').forEach(el=>el.classList.toggle('now',+el.dataset.i===seqStep));if(seq.kick[seqStep])kick(t,.45);if(seq.snare[seqStep])snare(t,.32);if(seq.hat[seqStep])hat(t,.13);seqStep=(seqStep+1)%8;seqTimer=setTimeout(playSeqStep,beat*1000)}
+function setSeq(k,s,h,msg){seq.kick=k;seq.snare=s;seq.hat=h;renderSeq();document.getElementById('rhythmExplain').textContent=msg;}
+function dragMembers(){document.querySelectorAll('.member').forEach(el=>{let dx=0,dy=0,drag=false;el.addEventListener('pointerdown',e=>{drag=true;el.setPointerCapture(e.pointerId);dx=e.clientX-el.offsetLeft;dy=e.clientY-el.offsetTop;document.querySelectorAll('.member').forEach(m=>m.classList.remove('active'));el.classList.add('active');toast(el.textContent.trim().split(/\s+/)[0]+' 파트 선택')});el.addEventListener('pointermove',e=>{if(!drag)return;const p=document.getElementById('stage').getBoundingClientRect();let x=e.clientX-p.left-dx,y=e.clientY-p.top-dy;x=Math.max(5,Math.min(p.width-el.offsetWidth-5,x));y=Math.max(60,Math.min(p.height-el.offsetHeight-5,y));el.style.left=x+'px';el.style.top=y+'px'});el.addEventListener('pointerup',()=>drag=false)})}
+function confetti(){for(let i=0;i<44;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.background=['#0a8f78','#ffe58a','#ff9d67','#7db7ff','#b893ff','#ff82a9'][i%6];c.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),2300)}}
+document.getElementById('startAudio').onclick=()=>{ensureAudio();tone(523.25,audioCtx.currentTime,.15,'sine',.18);tone(659.25,audioCtx.currentTime+.15,.15,'sine',.18);toast('소리가 켜졌어요')};
+document.getElementById('playBtn').onclick=e=>{ensureAudio();isPlaying=!isPlaying;e.target.textContent=isPlaying?'⏸ 정지':'▶ 재생';if(isPlaying){stepIndex=0;playLoopStep()}else{clearTimeout(timer);document.getElementById('nowStatus').textContent='대기 중'}};
+document.getElementById('fillBtn').onclick=()=>{ensureAudio();let t=audioCtx.currentTime+.02;[0,.12,.24,.36].forEach((d,i)=>{snare(t+d,.24); if(i>1)hat(t+d,.15)});toast('필인! 다음 섹션으로 넘어가는 느낌')};
+document.getElementById('muteBtn').onclick=e=>{ensureAudio();muted=!muted;master.gain.value=muted?0:.7;e.target.textContent=muted?'🔈 음소거 해제':'🤫 전체 음소거'};
+document.getElementById('sectionSelect').onchange=()=>{stepIndex=0;updateGuide()};
+document.getElementById('bpm').oninput=e=>document.getElementById('bpmVal').textContent=e.target.value;
+document.getElementById('energy').oninput=e=>{const txt=['아주 작게','작게','중간','크게','폭발'][e.target.value-1];document.getElementById('energyVal').textContent=txt};
+document.querySelectorAll('input[data-track]').forEach(r=>r.oninput=e=>{const tr=e.target.dataset.track;vols[tr]=e.target.value/100;document.getElementById(tr+'Val').textContent=e.target.value+'%';const meterId={vocal:'meterVocal',guitar:'meterGuitar',keyboard:'meterKeyboard',drum:'meterDrum'}[tr];document.getElementById(meterId).style.width=e.target.value+'%'});
+document.getElementById('seqPlay').onclick=e=>{if(seqTimer){clearTimeout(seqTimer);seqTimer=null;document.querySelectorAll('.step').forEach(s=>s.classList.remove('now'));e.target.textContent='▶ 리듬만 재생'}else{seqStep=0;playSeqStep();e.target.textContent='⏸ 리듬 정지'}};
+document.getElementById('preset4').onclick=()=>setSeq([1,0,0,0,1,0,0,0],[0,0,1,0,0,0,1,0],[1,0,1,0,1,0,1,0],'4비트: 기본 박이 또렷해서 처음 합주할 때 안정적입니다.');
+document.getElementById('preset8').onclick=()=>setSeq([1,0,0,0,1,0,0,0],[0,0,1,0,0,0,1,0],[1,1,1,1,1,1,1,1],'8비트: 하이햇이 촘촘해져 록/팝 밴드 느낌이 강해집니다.');
+document.getElementById('presetFill').onclick=()=>setSeq([1,0,0,0,1,0,0,0],[0,0,1,0,0,1,1,1],[1,1,1,1,1,1,1,1],'필인: 마지막 부분에 스네어를 추가해 다음 구간으로 넘어가는 신호를 만듭니다.');
+document.getElementById('randomStage').onclick=()=>{document.querySelectorAll('.member').forEach(el=>{el.style.left=(10+Math.random()*72)+'%';el.style.top=(70+Math.random()*240)+'px'});toast('무대 배치 완료')};
+document.getElementById('confettiBtn').onclick=confetti;
+document.getElementById('saveJournal').onclick=()=>{const team=document.getElementById('teamName').value||'우리 팀';const text=document.getElementById('journal').value||'아직 작성 전';const log=`${new Date().toLocaleString()}\n[${team}]\n${text}`;localStorage.setItem('bandJournal',log);document.getElementById('savedLog').textContent=log;toast('연습 일지 저장 완료')};
+document.getElementById('resetAll').onclick=()=>{localStorage.removeItem('bandJournal');location.reload()};
+document.querySelectorAll('.mission input').forEach(ch=>ch.onchange=()=>{if([...document.querySelectorAll('.mission input')].every(x=>x.checked)){confetti();toast('미션 올 클리어!')}});
+renderPads();renderSeq();dragMembers();updateGuide();document.getElementById('savedLog').textContent=localStorage.getItem('bandJournal')||'저장된 일지가 여기에 표시됩니다.';
+</script>
+</body>
+</html>

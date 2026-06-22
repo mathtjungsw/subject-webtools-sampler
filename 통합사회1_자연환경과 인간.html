@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>자연환경과 인간: 생태시민 탐험대</title>
+  <style>
+    :root{
+      --bg:#f6f1e8; --ink:#28323a; --muted:#64727a; --card:#fffaf1; --line:#e6dcc9;
+      --green:#1c8c64; --green2:#9bd4b4; --blue:#4aa6d8; --blue2:#b8e1f4; --orange:#f59a42;
+      --red:#e45c4f; --purple:#7764d8; --sand:#edd3a2; --dark:#20343a;
+      --shadow:0 16px 38px rgba(45,48,52,.14);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:radial-gradient(circle at 10% 0%,#fff7df 0 18%,transparent 32%),linear-gradient(135deg,#f6f1e8,#e9f5ef);color:var(--ink)}
+    button,input,select,textarea{font-family:inherit}
+    .app{min-height:100vh;display:grid;grid-template-columns:290px 1fr}
+    aside{position:sticky;top:0;height:100vh;background:linear-gradient(180deg,#23464c,#17323a);color:white;padding:24px 18px;overflow:auto;box-shadow:8px 0 28px rgba(0,0,0,.12);z-index:3}
+    .brand{display:flex;gap:12px;align-items:center;margin-bottom:18px}.logo{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,#8ee2b4,#55abe3);display:grid;place-items:center;font-size:30px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    h1{font-size:21px;margin:0;line-height:1.25} .subtitle{font-size:12px;color:#c8e7de;margin-top:5px}
+    .scoreBox{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:14px;margin:18px 0}
+    .scoreRow{display:flex;justify-content:space-between;gap:10px;margin:7px 0;font-size:13px}.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden}.bar>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#9be7bd,#ffd36c,#ff8b74);transition:.5s}
+    nav a{display:flex;align-items:center;gap:10px;color:white;text-decoration:none;padding:12px 12px;border-radius:15px;margin:5px 0;font-weight:700;font-size:14px;border:1px solid transparent}
+    nav a:hover, nav a.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.16)}
+    .mini{font-size:12px;color:#d3e7e4;line-height:1.55;margin-top:16px}.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.12);margin:4px 3px 0 0;font-size:12px}
+    main{padding:28px;max-width:1320px;width:100%;margin:auto}.hero{position:relative;overflow:hidden;border-radius:34px;background:linear-gradient(135deg,#fffaf1 0%,#e7f7ef 55%,#dff1ff 100%);box-shadow:var(--shadow);padding:36px;min-height:330px;border:1px solid white}
+    .hero h2{font-size:42px;margin:0 0 12px;letter-spacing:-1px}.hero p{font-size:17px;line-height:1.75;max-width:720px;color:#4e5b61}.heroButtons{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.btn{border:0;border-radius:16px;padding:12px 16px;font-weight:900;background:#243d44;color:white;cursor:pointer;box-shadow:0 8px 18px rgba(20,40,45,.14);transition:.18s;display:inline-flex;gap:8px;align-items:center}.btn:hover{transform:translateY(-2px)}.btn.alt{background:white;color:#243d44;border:1px solid var(--line)}.btn.green{background:var(--green)}.btn.orange{background:var(--orange)}.btn.red{background:var(--red)}.btn.purple{background:var(--purple)}
+    .planet{position:absolute;right:42px;top:40px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#c9fff1 0 6%,transparent 7%),radial-gradient(circle at 50% 52%,#8ad6ff 0 52%,#48a8d8 53% 100%);box-shadow:inset -22px -26px 0 rgba(0,0,0,.08),0 24px 54px rgba(26,87,115,.18);animation:float 4s ease-in-out infinite}.land{position:absolute;background:#58bf77;border-radius:50% 44% 55% 40%;filter:drop-shadow(0 2px 0 rgba(0,0,0,.05))}.l1{width:105px;height:64px;left:50px;top:80px;transform:rotate(-20deg)}.l2{width:90px;height:78px;left:160px;top:125px;transform:rotate(28deg)}.l3{width:120px;height:50px;left:80px;top:200px;transform:rotate(10deg)}.cloud{position:absolute;background:white;opacity:.86;border-radius:999px;animation:drift 8s linear infinite}.c1{width:80px;height:18px;left:30px;top:150px}.c2{width:110px;height:22px;left:170px;top:72px;animation-delay:-3s}@keyframes float{50%{transform:translateY(-10px)}}@keyframes drift{50%{transform:translateX(18px)}}
+    section{margin:28px 0}.sectionHead{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:0 0 16px}.sectionHead h3{font-size:28px;margin:0}.sectionHead p{margin:6px 0 0;color:var(--muted);line-height:1.55}.grid{display:grid;gap:16px}.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}.grid.four{grid-template-columns:repeat(4,1fr)}
+    .card{background:rgba(255,250,241,.92);border:1px solid rgba(255,255,255,.75);box-shadow:var(--shadow);border-radius:28px;padding:20px;position:relative;overflow:hidden}.card h4{margin:0 0 10px;font-size:20px}.card p{line-height:1.65;color:#506067}.tag{display:inline-flex;padding:6px 10px;border-radius:999px;background:#edf6ec;color:#216a4b;font-size:12px;font-weight:900;margin:3px}.visual{min-height:150px;border-radius:22px;background:#eaf6f8;position:relative;overflow:hidden;border:1px solid rgba(0,0,0,.06)}
+    .mapWrap{height:380px;background:linear-gradient(180deg,#dff4ff,#f7efe0);border-radius:28px;position:relative;overflow:hidden;border:1px solid #d5e8ee}.worldBlob{position:absolute;border-radius:47% 53% 48% 52%;background:#7cc48b;opacity:.88}.b1{width:170px;height:90px;left:110px;top:110px}.b2{width:220px;height:110px;left:370px;top:90px}.b3{width:150px;height:150px;left:590px;top:160px}.b4{width:180px;height:90px;left:780px;top:255px}.eq{position:absolute;left:0;right:0;top:185px;border-top:2px dashed rgba(54,112,137,.35)}.pin{position:absolute;transform:translate(-50%,-50%);border:0;border-radius:999px;background:white;box-shadow:0 6px 18px rgba(0,0,0,.18);padding:8px 10px;font-size:24px;cursor:pointer}.pin:hover{transform:translate(-50%,-55%) scale(1.05)}
+    .infoPanel{min-height:380px}.bigIcon{font-size:70px;line-height:1}.climateStats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.stat{background:white;border:1px solid var(--line);border-radius:18px;padding:12px}.stat b{font-size:22px}.match{display:grid;grid-template-columns:1fr 1fr;gap:12px}.draggable,.dropzone{padding:12px;border-radius:16px;border:2px dashed #d8cab2;background:white;margin:8px 0;cursor:grab}.dropzone{min-height:55px;background:#fbf4e6;cursor:default}.dropzone.good{border-color:var(--green);background:#ecfff4}.draggable.used{opacity:.35;pointer-events:none}.feedback{padding:12px;border-radius:16px;background:#f3f7fb;margin-top:10px;line-height:1.55}
+    .sliderBox label{font-weight:900}.sliderBox input[type=range]{width:100%;accent-color:var(--green);margin:14px 0}.scene{height:250px;border-radius:24px;background:linear-gradient(#a7dcff 0 54%,#74c6ec 55% 100%);position:relative;overflow:hidden;border:1px solid #c8dde7}.island{position:absolute;left:80px;bottom:0;width:410px;height:115px;background:#e5c36d;border-radius:50% 50% 0 0}.house{position:absolute;left:230px;bottom:80px;font-size:64px;transition:.4s}.water{position:absolute;left:0;right:0;bottom:0;height:45%;background:rgba(45,146,199,.72);transition:.45s}.speech{background:white;border-radius:18px;padding:12px;box-shadow:0 8px 20px rgba(0,0,0,.12);line-height:1.5}.choices{display:flex;flex-wrap:wrap;gap:8px}.choice{border:1px solid var(--line);background:white;color:var(--ink)}
+    .balance{height:260px;position:relative;background:linear-gradient(180deg,#f7fbff,#eff8ec);border-radius:24px;border:1px solid var(--line);overflow:hidden}.beam{position:absolute;left:15%;right:15%;top:126px;height:14px;background:#8b684c;border-radius:999px;transform-origin:center;transition:.35s}.fulcrum{position:absolute;left:50%;top:140px;transform:translateX(-50%);width:0;height:0;border-left:45px solid transparent;border-right:45px solid transparent;border-bottom:86px solid #5d6b72}.sideIcon{position:absolute;font-size:72px;top:40px}.leftIcon{left:18%}.rightIcon{right:18%}.tokenBank{display:flex;flex-wrap:wrap;gap:8px}.token{background:white;border:1px solid var(--line);border-radius:999px;padding:9px 11px;cursor:pointer;font-weight:800}.token.on{background:#daf4e7;border-color:#91d9b6}.missionGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.mission{background:white;border:1px solid var(--line);border-radius:20px;padding:14px;cursor:pointer;min-height:110px;transition:.2s}.mission.done{background:#e8fff1;border-color:#70ca94}.mission .emoji{font-size:34px}.mission b{display:block;margin:6px 0}.badgeWall{display:flex;gap:8px;flex-wrap:wrap}.badge{padding:9px 12px;border-radius:999px;background:#eee;color:#808080;font-weight:900}.badge.on{background:linear-gradient(135deg,#ffe08c,#9be6b9);color:#243d44}
+    .quizCard{display:none}.quizCard.active{display:block}.option{display:block;width:100%;text-align:left;background:white;border:1px solid var(--line);border-radius:16px;padding:13px;margin:8px 0;cursor:pointer}.option.correct{background:#e8fff1;border-color:#61c98b}.option.wrong{background:#fff0ec;border-color:#ed8c7a}.timeline{height:140px;display:flex;align-items:center;gap:12px;overflow:auto;padding:10px}.timeNode{min-width:170px;background:white;border:1px solid var(--line);border-radius:18px;padding:13px;position:relative}.timeNode:after{content:"→";position:absolute;right:-18px;top:42%;color:#9aa}.timeNode:last-child:after{display:none}.report textarea,.report input{width:100%;border:1px solid var(--line);border-radius:16px;background:white;padding:12px;margin:6px 0 12px}.stamp{position:absolute;right:16px;top:16px;border:3px solid #e6594f;color:#e6594f;border-radius:12px;padding:5px 9px;font-weight:1000;transform:rotate(8deg);opacity:.85}.toast{position:fixed;right:24px;bottom:24px;background:#20343a;color:white;border-radius:18px;padding:14px 16px;box-shadow:var(--shadow);z-index:50;opacity:0;transform:translateY(20px);transition:.3s}.toast.show{opacity:1;transform:none}.printOnly{display:none}
+    @media(max-width:1050px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.planet{opacity:.28;right:-80px}.grid.two,.grid.three,.grid.four{grid-template-columns:1fr}.missionGrid{grid-template-columns:1fr 1fr}.hero h2{font-size:34px}}
+    @media print{aside,.heroButtons,.btn,nav,.toast{display:none!important}.app{display:block}main{padding:0}.card,.hero{box-shadow:none;border:1px solid #ddd;break-inside:avoid}.printOnly{display:block}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand"><div class="logo">🌍</div><div><h1>생태시민<br>탐험대</h1><div class="subtitle">자연환경과 인간 인터렉티브 수업툴</div></div></div>
+    <div class="scoreBox">
+      <div class="scoreRow"><span>탐험 점수</span><b id="score">0</b></div><div class="bar"><i id="scoreBar"></i></div>
+      <div class="scoreRow"><span>완료 미션</span><b><span id="doneCount">0</span>/8</b></div>
+      <div class="badgeWall" id="badgeWall"></div>
+    </div>
+    <nav>
+      <a href="#climate" class="active">🧭 기후 생활 탐험</a>
+      <a href="#landform">⛰️ 지형 카드 실험</a>
+      <a href="#change">🌊 기후변화 시뮬레이터</a>
+      <a href="#viewpoint">⚖️ 인간과 자연 관점</a>
+      <a href="#problem">🧩 환경문제 해결실</a>
+      <a href="#quiz">🎮 생태시민 퀴즈</a>
+      <a href="#report">📝 활동 보고서</a>
+    </nav>
+    <div class="mini">수업 흐름: 개인 조작 → 짝 토의 → 모둠 발표 → 보고서 출력<br><span class="pill">시각화</span><span class="pill">드래그</span><span class="pill">시뮬레이션</span><span class="pill">토론</span></div>
+  </aside>
+  <main>
+    <div class="hero">
+      <div class="planet"><span class="land l1"></span><span class="land l2"></span><span class="land l3"></span><span class="cloud c1"></span><span class="cloud c2"></span></div>
+      <h2>자연환경과 인간,<br>직접 조작하며 이해하기</h2>
+      <p>기후와 지형이 의식주와 산업을 어떻게 바꾸는지 탐험하고, 기후변화와 환경 문제를 해결하는 생태시민 미션까지 이어지는 수업용 웹툴입니다.</p>
+      <div class="heroButtons"><button class="btn green" onclick="jump('#climate')">🚀 탐험 시작</button><button class="btn alt" onclick="resetAll()">↺ 초기화</button><button class="btn alt" onclick="window.print()">🖨️ 보고서 인쇄</button></div>
+    </div>
+
+    <section id="climate">
+      <div class="sectionHead"><div><h3>1. 기후 생활 탐험 지도</h3><p>지도 핀을 누르면 기후별 생활 모습, 의복, 가옥, 음식, 산업이 바뀝니다.</p></div><button class="btn" onclick="randomClimate()">🎲 랜덤 탐험</button></div>
+      <div class="grid two">
+        <div class="card"><div class="mapWrap" id="map">
+          <div class="worldBlob b1"></div><div class="worldBlob b2"></div><div class="worldBlob b3"></div><div class="worldBlob b4"></div><div class="eq"></div>
+          <button class="pin" style="left:50%;top:190px" onclick="showClimate('tropical')">🌴</button>
+          <button class="pin" style="left:46%;top:155px" onclick="showClimate('dry')">🐪</button>
+          <button class="pin" style="left:54%;top:140px" onclick="showClimate('temperate')">🌾</button>
+          <button class="pin" style="left:58%;top:90px" onclick="showClimate('cold')">🌲</button>
+          <button class="pin" style="left:68%;top:58px" onclick="showClimate('polar')">🧊</button>
+          <button class="pin" style="left:34%;top:170px" onclick="showClimate('highland')">⛰️</button>
+        </div></div>
+        <div class="card infoPanel" id="climateInfo"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sectionHead"><div><h3>2. 생활양식 매칭 게임</h3><p>왼쪽 생활 카드를 오른쪽 자연환경에 끌어다 놓으세요. 틀려도 바로 피드백이 나옵니다.</p></div><button class="btn alt" onclick="resetMatch()">다시 하기</button></div>
+      <div class="card"><div class="match"><div id="dragBank"></div><div id="dropBank"></div></div><div class="feedback" id="matchFeedback">카드를 드래그해서 놓아 보세요.</div></div>
+    </section>
+
+    <section id="landform">
+      <div class="sectionHead"><div><h3>3. 지형 카드 실험실</h3><p>지형을 선택하면 생활과 산업이 어떻게 달라지는지 그림 카드로 확인합니다.</p></div></div>
+      <div class="grid three" id="landCards"></div>
+    </section>
+
+    <section id="change">
+      <div class="sectionHead"><div><h3>4. 기후변화 시뮬레이터</h3><p>온도 상승과 해수면 상승 슬라이더를 움직이며 변화의 양면성과 피해를 살펴봅니다.</p></div></div>
+      <div class="grid two">
+        <div class="card sliderBox"><h4>🌡️ 지구 평균 기온 상승</h4><label>기온 상승: <span id="tempVal">1.0</span>℃</label><input id="tempRange" type="range" min="0" max="4" step="0.1" value="1" oninput="updateClimateChange()"><div class="visual" id="tempVisual"></div><div class="feedback" id="tempFeedback"></div></div>
+        <div class="card sliderBox"><h4>🌊 해수면 상승 체험</h4><label>해수면 상승: <span id="seaVal">30</span>cm</label><input id="seaRange" type="range" min="0" max="120" step="5" value="30" oninput="updateClimateChange()"><div class="scene"><div class="island"></div><div class="house">🏠</div><div class="water" id="water"></div></div><div class="feedback" id="seaFeedback"></div></div>
+      </div>
+    </section>
+
+    <section id="viewpoint">
+      <div class="sectionHead"><div><h3>5. 인간과 자연의 관계 저울</h3><p>선택한 행동에 따라 인간 중심주의와 생태 중심주의 쪽으로 저울이 기울어집니다. 최종 목표는 ‘공존’입니다.</p></div><button class="btn alt" onclick="clearTokens()">선택 초기화</button></div>
+      <div class="grid two">
+        <div class="card"><div class="balance"><div class="sideIcon leftIcon">🏙️</div><div class="sideIcon rightIcon">🌳</div><div class="beam" id="beam"></div><div class="fulcrum"></div></div><div class="feedback" id="balanceFeedback"></div></div>
+        <div class="card"><h4>행동 선택</h4><div class="tokenBank" id="tokenBank"></div></div>
+      </div>
+    </section>
+
+    <section id="problem">
+      <div class="sectionHead"><div><h3>6. 환경문제 해결실</h3><p>사막화, 열대림 파괴, 해양 오염, 기후변화 문제를 해결하는 정책 조합을 만들어 보세요.</p></div></div>
+      <div class="grid two">
+        <div class="card"><h4>🧩 문제 선택</h4><div class="choices" id="problemBtns"></div><div class="visual" id="problemVisual"></div></div>
+        <div class="card"><h4>해결책 조합</h4><div id="solutionBtns" class="choices"></div><div class="feedback" id="solutionFeedback"></div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="sectionHead"><div><h3>7. 생태시민 일상 미션</h3><p>실천 미션을 눌러 나만의 생태시민 배지를 모아 보세요.</p></div></div>
+      <div class="card"><div class="missionGrid" id="missions"></div></div>
+    </section>
+
+    <section id="quiz">
+      <div class="sectionHead"><div><h3>8. 보스 퀴즈: 생태시민 등급 올리기</h3><p>핵심 개념을 게임처럼 확인합니다.</p></div><button class="btn purple" onclick="startQuiz()">퀴즈 시작/다시</button></div>
+      <div class="card"><div id="quizArea"></div></div>
+    </section>
+
+    <section id="report">
+      <div class="sectionHead"><div><h3>9. 활동 보고서 자동 정리</h3><p>오늘 탐험한 내용을 보고서로 정리하고 출력할 수 있습니다.</p></div><button class="btn green" onclick="makeReport()">보고서 생성</button></div>
+      <div class="grid two report">
+        <div class="card"><h4>작성하기</h4><input id="studentName" placeholder="이름 또는 모둠명"><input id="topic" placeholder="오늘의 탐구 주제"><textarea id="learned" rows="4" placeholder="새롭게 알게 된 점"></textarea><textarea id="action" rows="4" placeholder="내가 실천할 생태시민 행동"></textarea><textarea id="question" rows="4" placeholder="더 탐구하고 싶은 질문"></textarea></div>
+        <div class="card" id="reportOut"><h4>보고서 미리보기</h4><p>보고서 생성 버튼을 누르면 이곳에 활동 결과가 정리됩니다.</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast">점수 획득!</div>
+<script>
+const climates={
+  tropical:{name:'열대 기후',icon:'🌴',temp:'높음',rain:'많음',keywords:['얇고 간편한 옷','고상 가옥','향신료·기름','플랜테이션'],desc:'적도 주변, 일사량이 많고 덥고 습해 통풍과 습기 회피가 중요합니다.',life:'가볍고 헐렁한 옷, 바닥을 띄운 집, 비가 잘 흘러내리는 급경사 지붕이 어울립니다.',color:'#92d68a'},
+  dry:{name:'건조 기후',icon:'🐪',temp:'일교차 큼',rain:'매우 적음',keywords:['온몸을 감싸는 옷','흙집','오아시스 농업','유목'],desc:'물 부족, 강한 햇볕과 모래바람 때문에 물과 그늘, 이동성이 핵심입니다.',life:'사막은 외래 하천·오아시스 주변 농업, 스텝은 게르 같은 이동식 가옥과 유목이 발달합니다.',color:'#e9bd6c'},
+  temperate:{name:'온대 기후',icon:'🌾',temp:'온난',rain:'계절 차',keywords:['계절 의복','다양한 농업','쌀·밀·포도','도시 발달'],desc:'계절 변화가 뚜렷하고 농경에 유리해 인구와 산업이 모이기 쉽습니다.',life:'더위와 추위에 모두 적응하는 생활양식과 다양한 음식 문화가 발달합니다.',color:'#9bcf71'},
+  cold:{name:'냉대 기후',icon:'🌲',temp:'연교차 큼',rain:'눈 많음',keywords:['작은 창문','폐쇄적 가옥','타이가','목재·펄프'],desc:'겨울이 길고 추워 보온이 중요하며 침엽수림대가 넓게 나타납니다.',life:'나무집, 작은 창문, 밀·호밀·감자 재배, 목재 산업이 연결됩니다.',color:'#72b58e'},
+  polar:{name:'한대 기후',icon:'🧊',temp:'매우 낮음',rain:'눈·빙하',keywords:['이글루','순록 유목','어로·수렵','자원 개발 변화'],desc:'나무가 자라기 어렵고 농업이 불리해 유목·어로·수렵 중심 생활이 나타납니다.',life:'최근 기후변화와 자원 개발로 원주민 문화와 경제활동이 빠르게 변화합니다.',color:'#9bd9ef'},
+  highland:{name:'고산 지역',icon:'⛰️',temp:'고도↑ 기온↓',rain:'지역 차',keywords:['온화한 고산 도시','밭농사','목축','관광·광공업'],desc:'해발 고도가 높아 저지대보다 서늘하며 열대 지역에서는 고산 도시가 발달하기도 합니다.',life:'완만한 경사지에 거주하며 밭농사·목축, 산지 관광과 광공업이 발달합니다.',color:'#b9a7df'}
+};
+const state={score:0,done:new Set(),selectedProblem:'desert',solutions:new Set(),tokens:new Set(),quizIndex:0,quizScore:0,matched:0};
+function jump(id){document.querySelector(id).scrollIntoView({behavior:'smooth'})}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
+function addScore(n,key){ if(key && state.done.has(key)) return; if(key) state.done.add(key); state.score+=n; document.getElementById('score').textContent=state.score; document.getElementById('doneCount').textContent=state.done.size; document.getElementById('scoreBar').style.width=Math.min(100,state.score/220*100)+'%'; renderBadges(); toast(`+${n}점! ${key? '미션 완료':''}`); }
+function renderBadges(){const badges=[['climate','기후탐험'],['match','매칭왕'],['land','지형박사'],['change','변화분석'],['view','공존저울'],['problem','해결사'],['mission','실천가'],['quiz','퀴즈마스터']];document.getElementById('badgeWall').innerHTML=badges.map(b=>`<span class="badge ${state.done.has(b[0])?'on':''}">${b[1]}</span>`).join('')}
+function showClimate(k){const c=climates[k];document.getElementById('climateInfo').innerHTML=`<div class="stamp">탐험 기록</div><div class="bigIcon">${c.icon}</div><h4>${c.name}</h4><p>${c.desc}</p><div class="climateStats"><div class="stat"><span>기온</span><br><b>${c.temp}</b></div><div class="stat"><span>강수</span><br><b>${c.rain}</b></div></div><p><b>생활 모습:</b> ${c.life}</p><div>${c.keywords.map(x=>`<span class="tag">${x}</span>`).join('')}</div><div class="visual" style="margin-top:14px;background:linear-gradient(180deg,${c.color},#fff);display:grid;place-items:center;font-size:88px"><span>${c.icon}</span></div>`;addScore(10,'climate')}
+function randomClimate(){const keys=Object.keys(climates);showClimate(keys[Math.floor(Math.random()*keys.length)])}
+const matchItems=[['얇고 간편한 옷','tropical'],['게르와 유목','dry'],['쌀·밀·포도 등 다양한 농업','temperate'],['작은 창문과 보온 가옥','cold'],['순록 유목과 어로·수렵','polar'],['온화한 고산 도시','highland']];
+function resetMatch(){state.matched=0;const drag=document.getElementById('dragBank'),drop=document.getElementById('dropBank');drag.innerHTML='<h4>생활 카드</h4>';drop.innerHTML='<h4>자연환경</h4>';matchItems.sort(()=>Math.random()-.5).forEach(([text,key],i)=>{drag.innerHTML+=`<div class="draggable" draggable="true" data-key="${key}" id="drag${i}">${text}</div>`});Object.entries(climates).forEach(([key,c])=>{drop.innerHTML+=`<div class="dropzone" data-key="${key}">${c.icon} ${c.name}</div>`});document.querySelectorAll('.draggable').forEach(el=>el.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',el.id)));document.querySelectorAll('.dropzone').forEach(z=>{z.addEventListener('dragover',e=>e.preventDefault());z.addEventListener('drop',e=>{e.preventDefault();const id=e.dataTransfer.getData('text/plain');const el=document.getElementById(id);if(!el)return;if(el.dataset.key===z.dataset.key){z.classList.add('good');z.innerHTML+=' ✅ '+el.textContent;el.classList.add('used');state.matched++;document.getElementById('matchFeedback').textContent=`좋아요! ${state.matched}/6개 연결 완료`;if(state.matched===6)addScore(35,'match')}else{document.getElementById('matchFeedback').textContent='아직 아니에요. 자연환경의 특징과 생활양식의 이유를 다시 생각해 봅시다.'}})})}
+const landforms=[['산지','⛰️','해발 고도가 높고 경사가 급해 거주에는 불리하지만, 관광·목축·광공업이 발달할 수 있습니다.'],['평야','🌾','지표면이 편평하고 농경과 취락, 교통·도시 발달에 유리합니다.'],['해안','⚓','어업·양식업, 관광 산업, 항구와 산업 단지 발달에 유리합니다.'],['하천','🚢','평야를 만들고 교통로와 생활용수를 제공해 도시 발달에 영향을 줍니다.'],['화산','🌋','독특한 지형은 관광 자원이 되며, 화산재 토양은 농업 방식도 바꿉니다.'],['빙하','🏔️','피오르처럼 독특한 경관을 만들고 관광 자원으로 활용될 수 있습니다.']];
+function renderLand(){document.getElementById('landCards').innerHTML=landforms.map((x,i)=>`<div class="card" onclick="addScore(5,'land')"><div class="visual" style="display:grid;place-items:center;font-size:78px;background:linear-gradient(180deg,#fff,#e9f6fb)">${x[1]}</div><h4>${x[0]}</h4><p>${x[2]}</p><span class="tag">눌러서 탐험 점수</span></div>`).join('')}
+function updateClimateChange(){const temp=+document.getElementById('tempRange').value, sea=+document.getElementById('seaRange').value;document.getElementById('tempVal').textContent=temp.toFixed(1);document.getElementById('seaVal').textContent=sea;const ice=Math.max(0,100-temp*22);const forest=Math.max(0,100-temp*13);document.getElementById('tempVisual').innerHTML=`<div style="height:100%;display:flex;align-items:end;gap:18px;padding:20px"><div style="width:30%;height:${ice}%;background:#d9f5ff;border-radius:18px 18px 4px 4px;display:grid;place-items:center;font-size:34px">🧊</div><div style="width:30%;height:${forest}%;background:#89cf7f;border-radius:18px 18px 4px 4px;display:grid;place-items:center;font-size:34px">🌳</div><div style="font-size:${40+temp*12}px">🔥</div></div>`;let msg=temp<1.5?'아직 피해를 줄일 수 있는 중요한 구간입니다. 온실가스 감축이 핵심이에요.':temp<2.5?'빙하 감소, 산호 백화, 식량 생산 불안정이 커질 수 있습니다.':'기상 이변, 생태계 변화, 기후 난민 문제가 심각해질 수 있습니다.';document.getElementById('tempFeedback').textContent=msg;document.getElementById('water').style.height=(35+sea*0.45)+'%';document.getElementById('seaFeedback').textContent=sea<40?'해안 저지대는 아직 버티지만 침수 위험이 커지기 시작합니다.':sea<80?'섬나라와 연안 지역 주민의 거주권이 위협받습니다.':'삶의 터전을 떠나야 하는 기후 난민 문제가 커집니다.';addScore(1,'change')}
+const tokens=[['대규모 개발 우선',-2],['자원 채굴 확대',-2],['일회용품 편리성',-1],['생태 관광',1],['환경권 보장',2],['보호구역 지정',2],['지역 주민 참여',1],['미래 세대 고려',2]];
+function renderTokens(){document.getElementById('tokenBank').innerHTML=tokens.map((t,i)=>`<button class="token" onclick="toggleToken(${i},this)">${t[0]}</button>`).join('');updateBalance()}
+function toggleToken(i,el){const key='t'+i;if(state.tokens.has(key)){state.tokens.delete(key);el.classList.remove('on')}else{state.tokens.add(key);el.classList.add('on')}updateBalance();addScore(5,'view')}
+function clearTokens(){state.tokens.clear();document.querySelectorAll('.token').forEach(e=>e.classList.remove('on'));updateBalance()}
+function updateBalance(){let sum=0;state.tokens.forEach(k=>sum+=tokens[+k.slice(1)][1]);document.getElementById('beam').style.transform=`rotate(${Math.max(-18,Math.min(18,-sum*5))}deg)`;let text=sum<-1?'인간의 이익을 우선하는 쪽으로 기울었습니다. 자연의 한계와 미래 세대를 함께 고려해 볼까요?':sum>3?'생태 보전이 강합니다. 지역 주민의 삶과 경제도 함께 설계하면 공존에 가까워집니다.':'인간 생활과 자연 보전이 균형을 찾고 있습니다. 바로 공존의 출발점이에요.';document.getElementById('balanceFeedback').textContent=text}
+const problems={desert:['사막화','🏜️','장기간 가뭄, 과도한 방목과 개간이 원인이 될 수 있습니다.',['방목 조절','방풍림 조성','물 관리','지역 주민 교육']],forest:['열대림 파괴','🪓','무분별한 벌채와 경지 개간은 생물 다양성 감소와 온난화를 심화시킬 수 있습니다.',['벌채 규제','대체 소득','보호구역','책임 소비']],ocean:['해양 오염','🌊','플라스틱과 폐기물은 해양 생태계와 인간 생활에 피해를 줍니다.',['일회용품 감축','분리배출','기업 포장 개선','해변 정화']],climate:['기후변화','🌡️','온실가스 증가로 기상 이변, 해수면 상승, 생태계 변화가 나타납니다.',['재생에너지','대중교통','에너지 절약','국제 협력']]};
+function renderProblems(){document.getElementById('problemBtns').innerHTML=Object.entries(problems).map(([k,p])=>`<button class="btn choice" onclick="selectProblem('${k}')">${p[1]} ${p[0]}</button>`).join('');selectProblem('desert')}
+function selectProblem(k){state.selectedProblem=k;state.solutions.clear();const p=problems[k];document.getElementById('problemVisual').innerHTML=`<div style="height:100%;display:grid;place-items:center;text-align:center;font-size:70px;background:linear-gradient(180deg,#fff,#f3eddc)"><div>${p[1]}<p style="font-size:16px;max-width:420px;margin:8px;color:#536">${p[2]}</p></div></div>`;document.getElementById('solutionBtns').innerHTML=p[3].map((s,i)=>`<button class="btn choice" onclick="toggleSolution('${s}',this)">${s}</button>`).join('');document.getElementById('solutionFeedback').textContent='해결책을 3개 이상 조합해 보세요.'}
+function toggleSolution(s,el){if(state.solutions.has(s)){state.solutions.delete(s);el.classList.remove('green')}else{state.solutions.add(s);el.classList.add('green')}let n=state.solutions.size;document.getElementById('solutionFeedback').innerHTML=n<3?`현재 ${n}개 선택. 환경 문제는 개인·기업·정부·국제 사회의 협력이 필요합니다.`:`좋은 조합입니다! 선택한 해결책: <b>${[...state.solutions].join(', ')}</b>`;if(n>=3)addScore(25,'problem')}
+const missionData=[['💡','사용하지 않는 조명 끄기'],['🔌','플러그 뽑기'],['🚲','자전거·대중교통 이용'],['🥤','다회용 컵 사용'],['♻️','쓰레기 분리배출'],['🛍️','불필요한 소비 줄이기'],['🍽️','음식물 쓰레기 줄이기'],['📣','환경 문제 알리기'],['🌱','학교 주변 생태 관찰'],['🤝','친환경 캠페인 참여']];
+function renderMissions(){document.getElementById('missions').innerHTML=missionData.map((m,i)=>`<div class="mission" onclick="this.classList.toggle('done'); addScore(3,'mission')"><div class="emoji">${m[0]}</div><b>${m[1]}</b><small>오늘 실천 가능</small></div>`).join('')}
+const quiz=[['기후 요소에 해당하지 않는 것은?',['기온','강수','바람','국경선'],3],['건조 기후 지역에서 오아시스 주변 농업이 발달하는 가장 큰 이유는?',['물이 부족해서 물이 있는 곳에 집중되기 때문','눈이 많이 오기 때문','숲이 울창하기 때문','항구가 많기 때문'],0],['해안 지역 생활과 가장 관련이 적은 것은?',['어업','양식업','항구','순록 유목'],3],['기후변화 피해로 보기 어려운 것은?',['해수면 상승','산호 백화','기후 난민 증가','온실가스 자동 감소'],3],['생태시민의 태도와 가까운 것은?',['자연은 언제나 무한히 이용 가능하다','나의 행동이 환경에 미치는 영향을 성찰한다','환경 문제는 개인과 무관하다','미래 세대는 고려하지 않아도 된다'],1]];
+function startQuiz(){state.quizIndex=0;state.quizScore=0;renderQuiz()}
+function renderQuiz(){const area=document.getElementById('quizArea');if(state.quizIndex>=quiz.length){area.innerHTML=`<h4>퀴즈 완료!</h4><p>점수: ${state.quizScore}/${quiz.length}</p><div class="visual" style="display:grid;place-items:center;font-size:80px">${state.quizScore>=4?'🏆':'🌱'}</div>`;if(state.quizScore>=4)addScore(35,'quiz');return}const q=quiz[state.quizIndex];area.innerHTML=`<h4>문제 ${state.quizIndex+1}. ${q[0]}</h4>${q[1].map((o,i)=>`<button class="option" onclick="answerQuiz(${i},this)">${o}</button>`).join('')}<div class="feedback" id="quizFb">정답을 골라 보세요.</div>`}
+function answerQuiz(i,el){const q=quiz[state.quizIndex];document.querySelectorAll('.option').forEach((o,idx)=>{o.disabled=true;if(idx===q[2])o.classList.add('correct')});if(i===q[2]){state.quizScore++;document.getElementById('quizFb').textContent='정답입니다!';}else{el.classList.add('wrong');document.getElementById('quizFb').textContent='아쉬워요. 초록색 선택지가 정답입니다.'}setTimeout(()=>{state.quizIndex++;renderQuiz()},900)}
+function makeReport(){const name=document.getElementById('studentName').value||'이름 미입력';const topic=document.getElementById('topic').value||'자연환경과 인간의 관계';const learned=document.getElementById('learned').value||'기후와 지형이 인간 생활에 영향을 준다는 점을 알게 되었다.';const action=document.getElementById('action').value||'생활 속 친환경 행동을 실천하겠다.';const question=document.getElementById('question').value||'우리 지역의 자연환경은 생활양식에 어떤 영향을 줄까?';document.getElementById('reportOut').innerHTML=`<div class="stamp">완성</div><h4>생태시민 탐험 보고서</h4><p><b>작성자:</b> ${name}</p><p><b>탐구 주제:</b> ${topic}</p><p><b>탐험 점수:</b> ${state.score}점 / 완료 미션 ${state.done.size}개</p><h4>활동 요약</h4><ul><li>기후별 생활양식 탐험</li><li>지형과 산업 연결 분석</li><li>기후변화·해수면 상승 시뮬레이션</li><li>환경문제 해결책 조합</li></ul><h4>새롭게 알게 된 점</h4><p>${learned}</p><h4>나의 생태시민 실천</h4><p>${action}</p><h4>더 탐구할 질문</h4><p>${question}</p>`;addScore(20)}
+function resetAll(){localStorage.clear();location.reload()}
+window.addEventListener('scroll',()=>{let current='';document.querySelectorAll('section').forEach(s=>{if(scrollY>=s.offsetTop-120)current=s.id});document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current))});
+function init(){renderBadges();showClimate('tropical');resetMatch();renderLand();updateClimateChange();renderTokens();renderProblems();renderMissions();startQuiz();}
+init();
+</script>
+</body>
+</html>
