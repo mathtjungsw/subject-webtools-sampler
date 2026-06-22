@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="국어, 수학, 과학, 사회, 역사, 예체능 수업에 활용할 수 있는 인터랙티브 웹툴 모음"
+    />
+    <title>과목별 웹툴 맛보기</title>
+    <style>
+      :root {
+        --ink: #172133;
+        --muted: #647084;
+        --paper: #f7f7f2;
+        --line: #dfe2dc;
+        --lime: #d8ff72;
+        --blue: #4c6fff;
+        --coral: #ff785a;
+        --yellow: #ffd75e;
+        --shadow: 0 18px 50px rgba(29, 38, 58, 0.11);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 90% 10%, rgba(216, 255, 114, 0.55), transparent 24rem),
+          var(--paper);
+        font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 78px;
+        border-bottom: 1px solid rgba(23, 33, 51, 0.12);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.98rem;
+        font-weight: 850;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 2px solid var(--ink);
+        background: var(--yellow);
+        box-shadow: 3px 3px 0 var(--ink);
+        transform: rotate(-3deg);
+      }
+
+      .header-link {
+        font-size: 0.9rem;
+        font-weight: 750;
+        text-underline-offset: 4px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 54px;
+        align-items: end;
+        padding: 82px 0 72px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 18px;
+        padding: 7px 11px;
+        border: 1px solid var(--ink);
+        background: #fff;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        box-shadow: 3px 3px 0 var(--ink);
+        transform: rotate(-1deg);
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(3rem, 7.5vw, 6.7rem);
+        font-weight: 950;
+        line-height: 0.94;
+        letter-spacing: -0.075em;
+        word-break: keep-all;
+      }
+
+      h1 span {
+        position: relative;
+        z-index: 0;
+        white-space: nowrap;
+      }
+
+      h1 span::after {
+        position: absolute;
+        z-index: -1;
+        right: -0.04em;
+        bottom: 0.04em;
+        left: -0.02em;
+        height: 0.22em;
+        background: var(--lime);
+        content: "";
+        transform: rotate(-1.5deg);
+      }
+
+      .hero-copy {
+        padding-bottom: 8px;
+      }
+
+      .hero-copy p {
+        margin: 0 0 26px;
+        color: #455167;
+        font-size: clamp(1rem, 2vw, 1.16rem);
+        line-height: 1.75;
+        word-break: keep-all;
+      }
+
+      .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.68);
+      }
+
+      .stat strong {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 1.65rem;
+        font-weight: 900;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 650;
+      }
+
+      .catalog {
+        padding: 44px 0 100px;
+        border-top: 1px solid var(--line);
+      }
+
+      .catalog-head {
+        display: flex;
+        gap: 28px;
+        align-items: end;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+
+      .catalog h2 {
+        margin: 0;
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        letter-spacing: -0.055em;
+      }
+
+      .catalog h2 small {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--blue);
+        font-size: 0.78rem;
+        font-weight: 850;
+        letter-spacing: 0.08em;
+      }
+
+      .search-wrap {
+        position: relative;
+        width: min(100%, 330px);
+      }
+
+      .search-wrap::before {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        content: "⌕";
+        font-size: 1.3rem;
+        transform: translateY(-54%);
+      }
+
+      #search {
+        width: 100%;
+        height: 48px;
+        padding: 0 16px 0 43px;
+        border: 1px solid var(--ink);
+        border-radius: 0;
+        outline: none;
+        background: #fff;
+        color: var(--ink);
+      }
+
+      #search:focus {
+        box-shadow: 4px 4px 0 var(--blue);
+      }
+
+      .filters {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 34px;
+        padding-bottom: 4px;
+        overflow-x: auto;
+        scrollbar-width: thin;
+      }
+
+      .filter {
+        flex: 0 0 auto;
+        padding: 9px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #fff;
+        color: #4e5a70;
+        cursor: pointer;
+        font-size: 0.86rem;
+        font-weight: 750;
+      }
+
+      .filter:hover,
+      .filter:focus-visible {
+        border-color: var(--ink);
+      }
+
+      .filter.is-active {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: #fff;
+      }
+
+      .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 18px;
+      }
+
+      .tool-card {
+        --accent: var(--lime);
+        position: relative;
+        display: flex;
+        grid-column: span 4;
+        min-height: 290px;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #fff;
+        box-shadow: 0 1px 0 rgba(23, 33, 51, 0.06);
+        transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+      }
+
+      .tool-card:nth-child(4n + 2) {
+        --accent: #bed8ff;
+      }
+
+      .tool-card:nth-child(4n + 3) {
+        --accent: #ffd5c9;
+      }
+
+      .tool-card:nth-child(4n) {
+        --accent: #ffe888;
+      }
+
+      .tool-card:hover,
+      .tool-card:focus-within {
+        z-index: 1;
+        border-color: var(--ink);
+        box-shadow: var(--shadow);
+        transform: translateY(-6px);
+      }
+
+      .card-visual {
+        position: relative;
+        display: grid;
+        min-height: 124px;
+        place-items: center;
+        overflow: hidden;
+        border-bottom: 1px solid var(--line);
+        background: var(--accent);
+      }
+
+      .card-visual::before,
+      .card-visual::after {
+        position: absolute;
+        width: 92px;
+        height: 92px;
+        border: 1px solid rgba(23, 33, 51, 0.3);
+        border-radius: 50%;
+        content: "";
+      }
+
+      .card-visual::before {
+        top: -42px;
+        left: -28px;
+      }
+
+      .card-visual::after {
+        right: -30px;
+        bottom: -50px;
+      }
+
+      .card-icon {
+        position: relative;
+        z-index: 1;
+        font-size: 3.2rem;
+        filter: drop-shadow(3px 4px 0 rgba(255, 255, 255, 0.65));
+        transform: rotate(-4deg);
+        transition: transform 180ms ease;
+      }
+
+      .tool-card:hover .card-icon {
+        transform: rotate(4deg) scale(1.08);
+      }
+
+      .card-body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding: 21px 21px 19px;
+      }
+
+      .subject {
+        margin-bottom: 11px;
+        color: var(--blue);
+        font-size: 0.75rem;
+        font-weight: 850;
+        letter-spacing: 0.04em;
+      }
+
+      .card-body h3 {
+        margin: 0 0 9px;
+        font-size: 1.18rem;
+        line-height: 1.35;
+        letter-spacing: -0.035em;
+        word-break: keep-all;
+      }
+
+      .card-body p {
+        margin: 0 0 20px;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.58;
+        word-break: keep-all;
+      }
+
+      .open-tool {
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        font-size: 0.86rem;
+        font-weight: 850;
+        text-decoration: none;
+      }
+
+      .open-tool::after {
+        content: "↗";
+        font-size: 1.05rem;
+      }
+
+      .open-tool:focus-visible {
+        outline: 3px solid var(--blue);
+        outline-offset: 5px;
+      }
+
+      .empty {
+        display: none;
+        padding: 60px 20px;
+        border: 1px dashed var(--muted);
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .empty.is-visible {
+        display: block;
+      }
+
+      footer {
+        padding: 28px 0 42px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      footer .shell {
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+      }
+
+      .tool-card[hidden] {
+        display: none;
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          gap: 32px;
+          padding-top: 60px;
+        }
+
+        .hero-copy {
+          max-width: 620px;
+        }
+
+        .tool-card {
+          grid-column: span 6;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .shell {
+          width: min(100% - 28px, 1180px);
+        }
+
+        .site-header {
+          min-height: 66px;
+        }
+
+        .header-link {
+          display: none;
+        }
+
+        .hero {
+          padding: 48px 0 54px;
+        }
+
+        h1 {
+          font-size: clamp(2.65rem, 14vw, 4.3rem);
+        }
+
+        .catalog-head {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .search-wrap {
+          width: 100%;
+        }
+
+        .tool-card {
+          grid-column: 1 / -1;
+          min-height: 270px;
+        }
+
+        footer .shell {
+          flex-direction: column;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="shell site-header">
+      <a class="brand" href="#top" aria-label="과목별 웹툴 맛보기 처음으로">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        과목별 웹툴 맛보기
+      </a>
+      <a class="header-link" href="#tools">웹툴 둘러보기 ↓</a>
+    </header>
+
+    <main id="top">
+      <section class="shell hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow">교실에서 바로 쓰는 인터랙티브 콘텐츠</p>
+          <h1 id="hero-title">배우고,<br /><span>눌러보고,</span><br />이해하기.</h1>
+        </div>
+        <div class="hero-copy">
+          <p>
+            설명만 듣는 수업에서 한 걸음 더. 과목의 핵심 개념을 직접 조작하고 확인할 수 있는
+            작은 웹툴을 한곳에 모았습니다.
+          </p>
+          <div class="hero-stats" aria-label="웹툴 모음 현황">
+            <div class="stat"><strong>10</strong><span>인터랙티브 웹툴</span></div>
+            <div class="stat"><strong>7</strong><span>교과 영역</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="catalog" id="tools" aria-labelledby="catalog-title">
+        <div class="shell">
+          <div class="catalog-head">
+            <h2 id="catalog-title"><small>WEBTOOL CATALOG</small>오늘은 무엇을 배워볼까요?</h2>
+            <label class="search-wrap">
+              <span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">웹툴 검색</span>
+              <input id="search" type="search" placeholder="제목이나 과목으로 검색" autocomplete="off" />
+            </label>
+          </div>
+
+          <div class="filters" aria-label="과목 필터">
+            <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">전체</button>
+            <button class="filter" type="button" data-filter="국어" aria-pressed="false">국어</button>
+            <button class="filter" type="button" data-filter="수학" aria-pressed="false">수학</button>
+            <button class="filter" type="button" data-filter="과학" aria-pressed="false">과학</button>
+            <button class="filter" type="button" data-filter="사회·역사" aria-pressed="false">사회·역사</button>
+            <button class="filter" type="button" data-filter="예체능" aria-pressed="false">예체능</button>
+            <button class="filter" type="button" data-filter="생활경제" aria-pressed="false">생활경제</button>
+          </div>
+
+          <div class="tool-grid" id="tool-grid">
+            <article class="tool-card" data-category="국어" data-search="공통국어 윤동주 별 로드맵 시 문학">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">🌌</span></div>
+              <div class="card-body">
+                <span class="subject">공통국어 1</span>
+                <h3>별을 따라 걷는 윤동주 로드맵</h3>
+                <p>작품과 생애를 따라가며 윤동주의 시 세계를 탐색해요.</p>
+                <a class="open-tool" href="./공통국어1_윤동주 로드맵.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="수학" data-search="공통수학 순열 경우의 수 선택지">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">🔢</span></div>
+              <div class="card-body">
+                <span class="subject">공통수학 1</span>
+                <h3>순열 탐험대</h3>
+                <p>자리를 채울 때마다 선택지가 줄어드는 원리를 직접 확인해요.</p>
+                <a class="open-tool" href="./공통수학1_순열/index.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="과학" data-search="통합과학 원소 주기성 결합 주기율표">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">⚛️</span></div>
+              <div class="card-body">
+                <span class="subject">통합과학 1</span>
+                <h3>원소 주기성과 결합 탐험대</h3>
+                <p>원소의 성질과 결합 규칙을 실험하듯 익혀요.</p>
+                <a class="open-tool" href="./통합과학1.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="사회·역사" data-search="통합사회 자연환경 인간 생태시민 환경">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">🌿</span></div>
+              <div class="card-body">
+                <span class="subject">통합사회 1</span>
+                <h3>자연환경과 인간: 생태시민 탐험대</h3>
+                <p>환경과 인간의 관계를 살피고 생태시민의 선택을 고민해요.</p>
+                <a class="open-tool" href="./통합사회1_자연환경과 인간.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="사회·역사" data-search="한국사 삼국 가야 남북국 성장 역사">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">🏯</span></div>
+              <div class="card-body">
+                <span class="subject">한국사</span>
+                <h3>삼국·가야의 성장부터 남북국의 등장까지</h3>
+                <p>고대 국가의 성장과 변화 흐름을 인터랙티브하게 정리해요.</p>
+                <a class="open-tool" href="./한국사_삼국가야의 성장부터 남북국의 등장까지.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="사회·역사" data-search="현대사회 윤리 정의 분배적 교정적 공정">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">⚖️</span></div>
+              <div class="card-body">
+                <span class="subject">현대사회와 윤리</span>
+                <h3>정의의 저울 실험실</h3>
+                <p>분배적 정의와 교정적 정의를 구체적인 상황으로 비교해요.</p>
+                <a class="open-tool" href="./현대사회와 윤리_정의.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="예체능" data-search="미술과 매체 재료 조형 입체 미술">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">🗿</span></div>
+              <div class="card-body">
+                <span class="subject">미술과 매체</span>
+                <h3>재료와 조형, 입체가 되다</h3>
+                <p>재료의 특성과 조형 요소가 입체 표현으로 이어지는 과정을 살펴봐요.</p>
+                <a class="open-tool" href="./미술과 매체.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="예체능" data-search="음악 밴드 합주 한 페이지 연주">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">🎸</span></div>
+              <div class="card-body">
+                <span class="subject">음악 1</span>
+                <h3>밴드 합주: 한 페이지가 될 수 있게</h3>
+                <p>파트별 연주와 합주의 원리를 한 페이지에서 맞춰봐요.</p>
+                <a class="open-tool" href="./음악1_밴드합주.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="예체능" data-search="스포츠 문화 축구 경기 규칙 체육">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">⚽</span></div>
+              <div class="card-body">
+                <span class="subject">스포츠 문화</span>
+                <h3>축구 경기 문화 웹툴</h3>
+                <p>경기 상황과 규칙을 살피며 건강한 스포츠 문화를 익혀요.</p>
+                <a class="open-tool" href="./스포츠문화_축구.html">웹툴 열기</a>
+              </div>
+            </article>
+
+            <article class="tool-card" data-category="생활경제" data-search="세금 계산 마트 영수증 부가가치세 경제">
+              <div class="card-visual"><span class="card-icon" aria-hidden="true">🧾</span></div>
+              <div class="card-body">
+                <span class="subject">생활경제</span>
+                <h3>마트 영수증 세금 계산</h3>
+                <p>실제 영수증처럼 금액을 입력하며 세금 계산 원리를 이해해요.</p>
+                <a class="open-tool" href="./세금계산.html">웹툴 열기</a>
+              </div>
+            </article>
+          </div>
+
+          <p class="empty" id="empty" role="status">조건에 맞는 웹툴이 없어요. 다른 검색어를 입력해 보세요.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="shell">
+        <span>과목별 웹툴 맛보기</span>
+        <span>배움의 순간을 조금 더 생생하게.</span>
+      </div>
+    </footer>
+
+    <script>
+      const search = document.querySelector("#search");
+      const filters = [...document.querySelectorAll(".filter")];
+      const cards = [...document.querySelectorAll(".tool-card")];
+      const empty = document.querySelector("#empty");
+      let activeCategory = "all";
+
+      function updateCatalog() {
+        const query = search.value.trim().toLocaleLowerCase("ko");
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const matchesCategory = activeCategory === "all" || card.dataset.category === activeCategory;
+          const matchesQuery = !query || card.dataset.search.toLocaleLowerCase("ko").includes(query);
+          card.hidden = !(matchesCategory && matchesQuery);
+          if (!card.hidden) visibleCount += 1;
+        });
+
+        empty.classList.toggle("is-visible", visibleCount === 0);
+      }
+
+      filters.forEach((filter) => {
+        filter.addEventListener("click", () => {
+          activeCategory = filter.dataset.filter;
+          filters.forEach((item) => {
+            const isActive = item === filter;
+            item.classList.toggle("is-active", isActive);
+            item.setAttribute("aria-pressed", String(isActive));
+          });
+          updateCatalog();
+        });
+      });
+
+      search.addEventListener("input", updateCatalog);
+    </script>
+  </body>
+</html>
